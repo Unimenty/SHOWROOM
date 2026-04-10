@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOBA BLISS | Premium Tea Experience</title>
     <meta name="description"
         content="Explore our premium boba menu — hand-crafted milk teas, fruit teas, and signature smoothies.">
@@ -18,22 +18,27 @@
     <style>
         :root {
             /* --- ZEN CREAM THEME --- */
-            --bg-dark: #f8f5f0;           /* Soft Cream Background */
+            --bg-dark: #f8f5f0;
+            /* Soft Cream Background */
             --bg-surface: #ffffff;
-            --bg-elevated: rgba(255, 255, 255, 0.5); /* Glass Base */
-            --accent-primary: #c9a07a;    /* Milk Tea Brown */
+            --bg-elevated: rgba(255, 255, 255, 0.5);
+            /* Glass Base */
+            --accent-primary: #c9a07a;
+            /* Milk Tea Brown */
             --accent-primary-rgb: 201, 160, 122;
             --accent-glow: #e6ccb2;
             --accent-warm: #d4a373;
-            --accent-black: #3c2a21;      /* Coffee Brown Text */
+            --accent-black: #3c2a21;
+            /* Coffee Brown Text */
             --text-main: #2d1810;
             --text-muted: #8d7b6d;
             --border-soft: rgba(201, 160, 122, 0.2);
             --glass-bg: rgba(255, 255, 255, 0.4);
             --glass-border: rgba(255, 255, 255, 0.5);
-            
-            --transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            
+
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-smooth: all 0.3s ease-out;
+
             /* Fluid Typography */
             --text-xs: clamp(0.7rem, 2vw, 0.75rem);
             --text-sm: clamp(0.85rem, 2.2vw, 0.95rem);
@@ -41,7 +46,7 @@
             --text-lg: clamp(1.2rem, 3.5vw, 1.4rem);
             --text-xl: clamp(1.6rem, 4.5vw, 2.2rem);
             --text-2xl: clamp(2.2rem, 6.5vw, 3.2rem);
-            
+
             --badge-hot: #ff7675;
             --badge-new: #55efc4;
             --badge-limited: #fab1a0;
@@ -72,7 +77,7 @@
             position: sticky;
             top: 0;
             z-index: 101;
-            transition: var(--transition);
+            transition: var(--transition-smooth);
             height: 70px;
             color: var(--text-main);
         }
@@ -91,10 +96,10 @@
             position: sticky;
             top: 70px;
             z-index: 99;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
         }
 
-        header.scrolled + .header-tools {
+        header.scrolled+.header-tools {
             top: 60px;
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -117,6 +122,11 @@
             overflow-x: auto;
             gap: 0.6rem;
             scrollbar-width: none;
+            /* Edge Fade Cue */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+            mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+            padding: 0 1.5rem;
+            margin: 0 -1.5rem;
         }
 
         .category-nav::-webkit-scrollbar {
@@ -140,7 +150,9 @@
             outline: none;
         }
 
-        .nav-pill:active { transform: scale(0.95); }
+        .nav-pill:active {
+            transform: scale(0.95);
+        }
 
         .nav-pill.active {
             background: var(--accent-primary);
@@ -155,7 +167,8 @@
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 160px);
+            height: calc(100dvh - 160px);
             width: 100vw;
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -168,223 +181,272 @@
             display: none;
         }
 
-        /* ── Skeletons ── */
-        .skeleton {
-            background: #eee;
-            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-            border-radius: 5px;
-            background-size: 200% 100%;
-            animation: 1.5s shine linear infinite;
+        /* ── Receipt / Order Slip Aesthetic ── */
+        .receipt-container {
+            font-family: 'Space Mono', monospace;
+            background: #fffcf5;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e8e2d4;
+            max-width: 450px;
+            margin: 0 auto;
         }
 
-        @keyframes shine {
-            to {
-                background-position-x: -200%;
-            }
+        .receipt-container::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background-image: linear-gradient(135deg, #fffcf5 25%, transparent 25%), linear-gradient(225deg, #fffcf5 25%, transparent 25%);
+            background-size: 10px 30px;
+            background-position: left bottom;
+            z-index: 10;
         }
 
-        .menu-card.is-skeleton {
-            background: white;
-            opacity: 1;
-            transform: scale(0.9);
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed var(--accent-black);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--accent-black);
+        }
+
+        .receipt-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .receipt-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            background: transparent;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            position: relative;
+            touch-action: pan-y;
+            padding: 4px 0;
+            color: var(--accent-black);
+        }
+
+        .summary-item.removed {
+            transform: translateX(100%) !important;
+            opacity: 0;
             pointer-events: none;
         }
 
-        .skeleton-img {
+        .summary-details h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .summary-details p {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .summary-price {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .total-section {
+            border-top: 2px dashed var(--accent-black);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: var(--accent-black);
+        }
+
+        .total-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .total-amount {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .swipe-hint {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #999;
+            margin-top: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .checkout-final-btn {
+            background: var(--accent-black);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
             width: 100%;
-            height: 100%;
-            border-radius: 32px;
-        }
-
-        .skeleton-text {
-            height: 20px;
-            margin-bottom: 10px;
-            width: 80%;
-        }
-
-        .skeleton-text.short {
-            width: 40%;
-        }
-
-        .skeleton-text.large {
-            height: 40px;
-            width: 90%;
+            cursor: pointer;
+            box-shadow: 0 15px 30px rgba(60, 42, 33, 0.2);
+            margin-top: 1rem;
         }
 
         /* ── Cards ── */
         .menu-card {
-            flex: 0 0 calc(100vw - 4rem);
-            height: 85%;
+            flex: 0 0 calc(100vw - 4.5rem);
+            height: auto;
+            min-height: 520px;
             margin: 0 0.75rem;
             position: relative;
             scroll-snap-align: center;
-            overflow: hidden;
             border-radius: 40px;
             cursor: pointer;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.06);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
             background: white;
             transition: var(--transition);
-            transform: scale(0.9);
-            opacity: 0.6;
-            border: 1px solid var(--glass-border);
+            transform: scale(0.94);
+            opacity: 0.9;
+            border: 1px solid var(--border-soft);
             padding: 0;
             text-align: left;
-        }
-
-        .menu-card:active {
-            transform: scale(0.98) !important;
-        }
-
-        /* first card needs left-padding offset */
-        .menu-card:first-child {
-            margin-left: 1.5rem;
-        }
-
-        .menu-card:last-child {
-            margin-right: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+            /* Let badge peek out if needed */
         }
 
         .menu-card.in-focus {
             transform: scale(1);
             opacity: 1;
+            box-shadow: 0 25px 60px rgba(60, 42, 33, 0.08);
         }
 
         .card-image-wrapper {
             width: 100%;
-            height: 100%;
-            border-radius: 32px;
-            position: absolute;
-            top: 0;
-            left: 0;
+            height: 320px;
+            /* Hero image height */
+            border-radius: 40px 40px 0 0;
+            position: relative;
             overflow: hidden;
+            background: #fdfaf5;
         }
 
         .card-image {
-            /* --- ADJUST HOME IMAGE SIZE HERE --- */
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.95);
+            object-fit: contain;
+            /* Don't crop the hero drink */
+            padding: 2.5rem;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .menu-card.in-focus .card-image {
-            transform: scale(1.04);
-        }
-
         .card-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 3rem 2rem 2.5rem;
-            background: linear-gradient(to top, white 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
-            color: var(--text-main);
-            text-align: left;
-            z-index: 5;
-            border-bottom-right-radius: 32px;
+            padding: 2rem 2.25rem 2.5rem;
+            background: white;
+            border-radius: 0 0 40px 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .cat-tag {
-            background: var(--accent-primary);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 4px;
-            font-size: var(--text-xs);
+            font-size: 0.65rem;
             font-weight: 800;
-            text-transform: uppercase;
+            color: var(--accent-primary);
             letter-spacing: 2px;
-            margin-bottom: 1rem;
-            display: inline-block;
-            font-family: 'Syne', sans-serif;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: block;
         }
 
         .card-name {
-            font-size: var(--text-xl);
+            font-size: var(--text-lg);
             font-weight: 800;
-            line-height: 1;
-            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
             color: var(--text-main);
             font-family: 'Syne', sans-serif;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
         }
 
         .card-sub {
             color: var(--text-muted);
-            font-size: var(--text-sm);
-            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
         }
 
         .card-price-main {
-            font-size: var(--text-base);
-            background: none;
-            padding: 0;
-            color: var(--accent-primary);
-            margin-top: 1rem;
+            margin-top: auto;
+            font-size: var(--text-lg);
             font-weight: 900;
-            font-family: 'Inter', sans-serif;
+            color: var(--accent-black);
             letter-spacing: -0.5px;
         }
 
-        /* ── Badge ── */
         .badge {
             position: absolute;
-            top: 1.4rem;
-            right: 1.4rem;
+            top: 1.25rem;
+            right: 1.25rem;
             background: var(--badge-hot);
             color: white;
             font-size: 0.65rem;
-            font-weight: 800;
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding: 0.35rem 0.75rem;
+            padding: 0.5rem 1rem;
             border-radius: 50px;
-            z-index: 10;
-            font-family: 'Syne', sans-serif;
+            z-index: 20;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes badge-pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4);
-            }
-
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 8px rgba(255, 71, 87, 0);
-            }
+        /* ── Pagination Dots ── */
+        .pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 1rem 0;
+            margin-top: -1rem;
         }
 
-        .badge.best {
-            background: var(--badge-hot);
-            animation: badge-pulse 2s ease infinite;
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            opacity: 0.2;
+            transition: var(--transition);
         }
 
-        .badge.new {
-            background: var(--badge-new);
-        }
-
-        .badge.limited {
-            background: var(--badge-limited);
-            animation: badge-pulse 2s ease infinite;
-        }
-
-        /* ── Slide counter ── */
-        .slide-counter {
-            position: absolute;
-            top: 1.4rem;
-            left: 1.4rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(8px);
-            padding: 0.3rem 0.75rem;
-            border-radius: 50px;
-            z-index: 10;
-            letter-spacing: 1px;
+        .dot.active {
+            opacity: 1;
+            background: var(--accent-primary);
+            transform: scale(1.4);
         }
 
         /* ── Modal ── */
@@ -398,8 +460,8 @@
             display: none;
             z-index: 3000;
             opacity: 0;
-            transition: opacity 0.4s ease;
-            overflow: hidden; /* Prevent horizontal scroll on overlay */
+            transition: opacity 0.4s ease, background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
         }
 
         .modal-overlay.active {
@@ -411,13 +473,114 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
-            padding-top: 4rem;
+            padding: 0;
             position: relative;
+            background: transparent;
+            /* Let overlay gradient show through */
+            overflow: hidden;
+        }
+
+        /* Cross-fade container for swipeable content */
+        .modal-content-inner {
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .modal-content-inner.slide-out-left {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        .modal-content-inner.slide-out-right {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        .modal-content-inner.slide-in-left {
+            animation: slideInFromRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .modal-content-inner.slide-in-right {
+            animation: slideInFromLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Swipe dots inside modal */
+        .modal-dots {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 6px;
+            z-index: 20;
+        }
+
+        .modal-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .modal-dot.active {
+            background: white;
+            transform: scale(1.4);
+        }
+
+        .modal-body-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            padding-top: 3.5rem;
             overflow-y: auto;
-            overflow-x: hidden; /* Fix: Block horizontal overflow from background blobs */
-            background: var(--bg-surface);
             -webkit-overflow-scrolling: touch;
+            padding-bottom: 120px;
+            /* Space for the fixed button */
+        }
+
+        .modal-hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            min-height: 48vh;
+        }
+
+        .modal-title-bubbly {
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            /* Slightly smaller to leave room */
+            font-weight: 900;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .modal-sheet::-webkit-scrollbar {
@@ -467,15 +630,18 @@
         .modal-title-bubbly {
             font-family: 'Syne', sans-serif;
             font-weight: 900;
-            font-size: var(--text-2xl);
+            font-size: clamp(2.2rem, 6vw, 2.8rem);
             text-align: center;
-            color: var(--text-main);
+            color: white;
             line-height: 1;
             letter-spacing: -2px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+            /* Space from the back button */
             text-transform: capitalize;
             position: relative;
             z-index: 2;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .modal-hero-section {
@@ -489,19 +655,55 @@
         }
 
         .modal-hero-image-focused {
-            /* --- ADJUST DETAIL IMAGE SIZE HERE --- */
             width: 100%;
-            max-height: 45vh; /* Increase this number to make it bigger */
-            
+            height: auto;
+            max-height: 40vh;
+            /* Scaled down slightly to fit title + options gracefully */
             object-fit: contain;
-            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.2));
-            transform: perspective(1200px) rotateY(-8deg) rotateX(10deg);
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: var(--transition);
             position: relative;
             z-index: 2;
-            flex-shrink: 1;
-            min-height: 0;
-            margin: 0;
+        }
+
+        .option-label {
+            color: white;
+            font-weight: 900;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+            margin-top: 1.5rem;
+        }
+
+        .option-selector-bar {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 4px;
+            border-radius: 50px;
+            gap: 4px;
+        }
+
+        .opt-btn {
+            flex: 1;
+            padding: 0.6rem 0.2rem;
+            border: none;
+            background: transparent;
+            color: white;
+            font-weight: 800;
+            font-size: 0.75rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .opt-btn.active {
+            background: white;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .size-selector-bar {
@@ -512,9 +714,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
         }
 
         .size-btn {
@@ -563,20 +764,33 @@
         .toppings-grid {
             display: flex;
             overflow-x: auto;
+            overflow-y: visible;
+            /* Fix: Allow whole pill height to show */
+            min-height: 100px;
+            /* Fix: Reserve space to avoid compression */
             gap: 0.75rem;
             margin-bottom: 2rem;
-            padding: 0.5rem 0 1.5rem 0;
+            padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+            /* Horizontal padding added */
+            margin: 0 -1.5rem;
+            /* Counteract padding */
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
+            /* Edge Fade Cue */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+            mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
         }
 
-        .toppings-grid::-webkit-scrollbar { display: none; }
+        .toppings-grid::-webkit-scrollbar {
+            display: none;
+        }
 
         .topping-chip {
             flex: 0 0 auto;
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: none;
+            /* Removed rectangle borders */
             border-radius: 50px;
             padding: 0.8rem 1.4rem;
             font-size: 0.85rem;
@@ -597,38 +811,212 @@
         .topping-chip.active {
             background: #ffffff;
             color: #1a1a1a;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
             border-color: #ffffff;
             transform: translateY(-2px);
         }
 
-        .topping-chip span { 
-            opacity: 0.5; 
-            font-size: 0.7rem; 
+        .topping-chip span {
+            opacity: 0.5;
+            font-size: 0.7rem;
             font-weight: 900;
             background: rgba(255, 255, 255, 0.1);
             padding: 2px 8px;
             border-radius: 20px;
         }
 
-        /* ── Shortlist Modal ── */
+        .tray-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            z-index: 5000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: auto;
+        }
+
+        .tray-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ── Shortlist Modal (receipt sheet) ── */
         .shortlist-modal {
-            background: var(--bg-light);
-            padding: 2rem 1.5rem;
+            background: #fffcf5;
+            padding: 2rem 1.5rem 1rem;
             border-radius: 32px 32px 0 0;
-            max-height: 80vh;
+            max-height: 82vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             transform: translateY(100%);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 2000;
+            z-index: 5100;
         }
 
         .shortlist-modal.active {
             transform: translateY(0);
+            box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ── Receipt inner styles ── */
+        .receipt-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed rgba(60, 42, 33, 0.15);
+            position: relative;
+        }
+
+        .receipt-title {
+            font-family: 'Space Mono', 'Courier New', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent-black);
+            text-transform: uppercase;
+        }
+
+        .receipt-time {
+            font-family: 'Space Mono', 'Courier New', monospace;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 0;
+            border-bottom: 1px dashed rgba(60, 42, 33, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .summary-item.removed {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .summary-details h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--accent-black);
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+
+        .summary-details p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .summary-item.staff-view .summary-details h4 {
+            font-size: 1.6rem !important;
+            color: #000 !important;
+            margin-bottom: 8px;
+        }
+
+        .summary-item.staff-view .summary-details p {
+            font-size: 1.2rem !important;
+            color: #000 !important;
+            background: #fff;
+            padding: 4px 8px;
+            display: inline-block;
+            border: 2px solid #000;
+            margin-top: 6px;
+            font-weight: 900;
+        }
+
+        .summary-item.staff-view .summary-price {
+            display: none;
+        }
+
+        .summary-price {
+            font-family: 'Space Mono', 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-black);
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .summary-price::before {
+            content: "GHS ";
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0 0.5rem;
+            border-top: 2px solid var(--accent-black);
+            margin-top: 0.5rem;
+        }
+
+        .total-label {
+            font-family: 'Space Mono', 'Courier New', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .total-amount {
+            font-family: 'Space Mono', 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-black);
+        }
+
+        .receipt-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            padding-bottom: env(safe-area-inset-bottom, 1rem);
+        }
+
+        .checkout-final-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--accent-black);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .checkout-final-btn:active {
+            transform: scale(0.97);
+        }
+
+        .swipe-hint {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.6;
         }
 
         .shortlist-item {
@@ -701,60 +1089,91 @@
             gap: 8px;
         }
 
-        /* ── Order bar ── */
-        .order-bar {
-            position: fixed;
-            bottom: calc(1.5rem + env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: var(--accent-primary);
-            color: white;
-            border-radius: 50px;
-            padding: 0.9rem 1.5rem;
+        /* ── Header Cart Icon ── */
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        .header-cart {
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            z-index: 2100;
-            transition: var(--transition);
-            min-width: 250px;
-            box-shadow: 0 10px 40px rgba(var(--accent-primary-rgb), 0.4);
+            justify-content: center;
+            background: none;
             border: none;
+            color: var(--accent-black);
             cursor: pointer;
-            outline: none;
+            position: relative;
+            transition: var(--transition);
         }
 
-        .order-bar:active {
-            transform: translateX(-50%) scale(0.96);
+        .header-cart:active {
+            transform: scale(0.9);
         }
 
-        .order-bar.active {
-            transform: translateX(-50%) translateY(0);
+        .cart-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--accent-black);
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1.5px solid var(--bg-dark);
         }
 
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.3);
-            }
+        header.scrolled .cart-badge {
+            border-color: white;
         }
 
-        .bounce {
-            animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .header-cart.has-items .cart-badge {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .header-cart svg {
+            transition: var(--transition);
+        }
+
+        .header-cart.has-items svg {
+            stroke: var(--accent-primary);
         }
 
         @keyframes ping {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); box-shadow: 0 0 30px rgba(var(--accent-primary-rgb), 0.6); }
-            100% { transform: translateX(-50%) scale(1); }
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
         }
 
-        .ping {
-            animation: ping 0.5s ease-out;
+        .ping-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .ping .ping-layer {
+            animation: ping 0.6s ease-out;
         }
 
         @media (min-width: 768px) {
@@ -780,10 +1199,16 @@
         </div>
         <div class="brand-name">BOBA BLISS</div>
         <div class="header-right">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-            </svg>
+            <button class="header-cart" id="topCartBtn" aria-label="View selection">
+                <div class="ping-layer"></div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                <div class="cart-badge" id="topCartBadge">0</div>
+            </button>
         </div>
     </header>
 
@@ -796,59 +1221,35 @@
         </nav>
     </div>
 
-    <!-- Fullscreen horizontal swiper -->
     <div class="menu-swiper" id="menuSwiper">
-        <!-- Skeletons shown initially -->
-        <div class="menu-card is-skeleton">
-            <div class="skeleton skeleton-img"></div>
-            <div class="card-content">
-                <div class="skeleton skeleton-text short"></div>
-                <div class="skeleton skeleton-text large"></div>
-                <div class="skeleton skeleton-text"></div>
-            </div>
-        </div>
-        <div class="menu-card is-skeleton">
-            <div class="skeleton skeleton-img"></div>
-            <div class="card-content">
-                <div class="skeleton skeleton-text short"></div>
-                <div class="skeleton skeleton-text large"></div>
-                <div class="skeleton skeleton-text"></div>
-            </div>
-        </div>
     </div>
 
-    <button class="order-bar" id="orderBar" aria-label="View selection">
-        <div id="orderCount"
-            style="background:white; color:black; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-weight:900;">
-            0</div>
-        <div style="text-transform:uppercase; font-weight:900; letter-spacing:1px; flex:1; text-align:center;">My
-            Selection</div>
-        <div id="orderTotal" style="font-weight:900;">0</div>
-    </button>
+    <div class="pagination-dots" id="paginationDots"></div>
 
-    <!-- Shortlist Modal -->
-    <div class="modal-overlay" id="shortlistOverlay" style="z-index: 2050;">
-        <div class="shortlist-modal" id="shortlistModal">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 style="font-weight: 900; font-size: 1.5rem;">Selection Summary</h2>
-                <div id="closeShortlist" style="cursor: pointer; font-weight: 900; opacity: 0.5;">CLOSE</div>
+    <div class="tray-overlay" id="shortlistOverlay">
+        <div class="shortlist-modal receipt-container" id="shortlistModal" onclick="event.stopPropagation()">
+            <div class="receipt-header">
+                <div class="receipt-title">ORDER SUMMARY</div>
+                <div class="receipt-time" id="receiptTime">12.00 PM</div>
+                <button id="closeShortlist" aria-label="Close"
+                    style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;color:var(--text-muted);cursor:pointer;line-height:1;padding:0.25rem;">✕</button>
             </div>
-            <div id="shortlistContent">
-                <!-- Items will be injected here -->
+
+            <div id="shortlistItems">
+                <!-- Items injected here -->
             </div>
-            <div style="margin-top: 2rem; border-top: 2px solid var(--accent-gray); padding-top: 1.5rem;">
-                <div
-                    style="display: flex; justify-content: space-between; font-weight: 900; font-size: 1.2rem; margin-bottom: 1rem;">
-                    <span>TOTAL</span>
-                    <span id="shortlistTotal">0</span>
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1rem;">
-                    Show this screen to the staff to complete your order.
-                </p>
-                <button class="checkout-pill" id="clearSelection"
-                    style="background: var(--accent-gray); color: var(--accent-black); justify-content: center;">
-                    <span class="pill-action">Clear All</span>
-                </button>
+
+            <div class="total-section">
+                <div class="total-label" style="font-size:0.7rem; opacity:0.8;">Show this at the counter</div>
+                <div class="total-amount" id="shortlistTotal">0</div>
+            </div>
+
+            <div class="receipt-footer">
+                <button class="checkout-final-btn" id="finalizeOrder">READY TO ORDER</button>
+                <div class="swipe-hint">← Swipe item to remove ←</div>
+                <button id="clearSelection"
+                    style="background: none; border: none; color: #999; font-size: 0.7rem; margin-top: 1rem; cursor: pointer; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Clear
+                    All</button>
             </div>
         </div>
     </div>
@@ -856,34 +1257,63 @@
     <!-- Item detail modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-sheet" id="modalSheet">
-            <button class="modal-close-btn" id="modalClose" aria-label="Close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
-            </button>
+            <!-- Navigation dots top-right -->
+            <div class="modal-dots" id="modalDots"></div>
 
-            <h1 id="modalTitle" class="modal-title-bubbly">Boba Drink</h1>
+            <div class="modal-body-content" id="modalBody">
+                <button class="modal-close-btn" id="modalClose" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
 
-            <img id="modalImg" src="" class="modal-hero-image-focused" alt="Boba drink">
+                <!-- Swipeable content wrapper -->
+                <div class="modal-content-inner" id="modalContentInner">
+                    <div class="modal-hero-section">
+                        <h1 id="modalTitle" class="modal-title-bubbly">Boba Drink</h1>
+                        <img id="modalImg" src="" class="modal-hero-image-focused" alt="Boba drink">
+                    </div>
+                </div>
 
-            <div class="size-selector-bar">
-                <button class="size-btn active" data-size="S">S<span>250ml</span></button>
-                <button class="size-btn" data-size="M">M<span>350ml</span></button>
-                <button class="size-btn" data-size="L">L<span>450ml</span></button>
+                <div class="option-label">Select Size</div>
+                <div class="size-selector-bar">
+                    <button class="size-btn active" data-size="S">S<span>250ml</span></button>
+                    <button class="size-btn" data-size="M">M<span>350ml</span></button>
+                    <button class="size-btn" data-size="L">L<span>450ml</span></button>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <div class="option-label">Sugar Level</div>
+                        <div class="option-selector-bar" id="sugarLevel">
+                            <button class="opt-btn" data-val="0%">0</button>
+                            <button class="opt-btn" data-val="50%">50</button>
+                            <button class="opt-btn active" data-val="100%">100</button>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="option-label">Ice Level</div>
+                        <div class="option-selector-bar" id="iceLevel">
+                            <button class="opt-btn" data-val="None">None</button>
+                            <button class="opt-btn" data-val="Less">Less</button>
+                            <button class="opt-btn active" data-val="Regular">Reg</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-label">Customizations</div>
+                <div class="toppings-grid" id="toppingsGrid"></div>
             </div>
 
+            <!-- Fixed Footer Button -->
             <div
-                style="color: white; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                Customizations
+                style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem; background: transparent; pointer-events: none;">
+                <button class="checkout-pill" id="addToOrder"
+                    style="box-shadow: 0 20px 40px rgba(0,0,0,0.2); pointer-events: auto;">
+                    <div class="pill-price" id="modalPrice">0</div>
+                    <div class="pill-action">+ Add to selection</div>
+                </button>
             </div>
-            <div class="toppings-grid" id="toppingsGrid">
-                <!-- Toppings injected here -->
-            </div>
-
-            <button class="checkout-pill" id="addToOrder">
-                <div class="pill-price" id="modalPrice">0</div>
-                <div class="pill-action">+ Add to selection</div>
-            </button>
         </div>
     </div>
 
@@ -904,7 +1334,7 @@
                 name: "Golden Special Latte",
                 sub: "Warm, velvety spices meet premium slow-steamed milk",
                 price: 65,
-                img: "items/KakaoTalk_Photo_2026-01-27-14-38-40.png",
+                img: "items/KakaoTalk_Photo_2026-01-27-14-38-40.webp",
                 badge: "Limited Edition",
                 badgeType: "limited",
                 gradient: "linear-gradient(135deg,#7f5006,#f0c040)"
@@ -915,7 +1345,7 @@
                 name: "Banana Coffee Blitz",
                 sub: "Cold brew caffeine meets smooth hand-mashed banana",
                 price: 60,
-                img: "items/Banana Coffee_w_ Logo.png",
+                img: "items/Banana Coffee_w_ Logo.webp",
                 badge: "Chef's Catch",
                 badgeType: "best",
                 gradient: "linear-gradient(135deg,#3d2b1f,#b5882a)"
@@ -926,7 +1356,7 @@
                 name: "Banana Matcha Silk",
                 sub: "Earthy matcha swirled with sweet banana cream foam",
                 price: 60,
-                img: "items/Banana Matcha_w_ Logo.png",
+                img: "items/Banana Matcha_w_ Logo.webp",
                 badge: "Premium Choice",
                 badgeType: "new",
                 gradient: "linear-gradient(135deg,#1a5e24,#f9ca24)"
@@ -937,7 +1367,7 @@
                 name: "Brown Sugar Pearl",
                 sub: "Artisanal hand-cooked pearls in nostalgic tiger-stripe sugar",
                 price: 55,
-                img: "items/brown-sugar-milk-tea.png",
+                img: "items/brown-sugar-milk-tea.webp",
                 badge: "Bestseller",
                 badgeType: "best",
                 gradient: "linear-gradient(135deg,#3b1a08,#7c3f1b)"
@@ -948,7 +1378,7 @@
                 name: "Signature Iced Blend",
                 sub: "Our secret multi-layered milk tea for pure comfort",
                 price: 55,
-                img: "items/KakaoTalk_Image_2025-01-24-15-14-47_002.png",
+                img: "items/KakaoTalk_Image_2025-01-24-15-14-47_002.webp",
                 gradient: "linear-gradient(135deg,#2c3e50,#bdc3c7)"
             },
             {
@@ -957,7 +1387,7 @@
                 name: "Strawberry Banana",
                 sub: "Thick, creamy fruit fusion with gooey tapioca pearls",
                 price: 52,
-                img: "items/strawberry-banana-smoothie.png",
+                img: "items/strawberry-banana-smoothie.webp",
                 badge: "Fan Favourite",
                 badgeType: "best",
                 gradient: "linear-gradient(135deg,#d63031,#f9ca24)"
@@ -968,7 +1398,7 @@
                 name: "Emerald Matcha",
                 sub: "Grade A artisanal matcha layered with fresh cream",
                 price: 48,
-                img: "items/strawberry-matcha-milk-tea.png",
+                img: "items/strawberry-matcha-milk-tea.webp",
                 badge: "New Arrival",
                 badgeType: "new",
                 gradient: "linear-gradient(135deg,#2d6a2f,#e87878)"
@@ -979,7 +1409,7 @@
                 name: "Royal Taro Tea",
                 sub: "Smooth purple taro root blended with silky whole milk",
                 price: 48,
-                img: "items/Taro-Milk-Tea.png",
+                img: "items/Taro-Milk-Tea.webp",
                 badge: null,
                 gradient: "linear-gradient(135deg,#5e2d82,#b07fd4)"
             },
@@ -989,7 +1419,7 @@
                 name: "Citrus Thai Tea",
                 sub: "Bold Thai-spiced black tea with a velvety milk finish",
                 price: 48,
-                img: "items/Thai-Milk-Tea.png",
+                img: "items/Thai-Milk-Tea.webp",
                 badge: null,
                 gradient: "linear-gradient(135deg,#b85c00,#f0a050)"
             },
@@ -999,7 +1429,7 @@
                 name: "Peach Jasmine Mix",
                 sub: "Juicy summer peach in a crisp jasmine green base",
                 price: 45,
-                img: "items/peach-strawberry-fruit-tea.png",
+                img: "items/peach-strawberry-fruit-tea.webp",
                 badge: null,
                 gradient: "linear-gradient(135deg,#c0392b,#f39c12)"
             }
@@ -1010,12 +1440,22 @@
             constructor() {
                 this.selection = JSON.parse(localStorage.getItem('boba_selection')) || [];
                 this.currentItem = null;
+                this.currentModalIndex = 0;
                 this.currentSize = 'S';
+                this.currentSugar = '100%';
+                this.currentIce = 'Regular';
                 this.currentToppings = new Set();
+                this._modalSwipeBound = false;
                 this.init();
             }
 
             init() {
+                // Handle swipe-back/back-button gestures (Rule 15 optimization)
+                window.addEventListener('popstate', (e) => {
+                    this.closeModal(true);
+                    this.toggleShortlist(false, true);
+                });
+
                 // Simulate skeleton loading
                 setTimeout(() => {
                     this.renderCards();
@@ -1030,7 +1470,9 @@
 
             renderCards() {
                 const swiper = document.getElementById('menuSwiper');
+                const dotsCont = document.getElementById('paginationDots');
                 swiper.innerHTML = '';
+                dotsCont.innerHTML = '';
 
                 bobaData.forEach((item, idx) => {
                     const card = document.createElement('button');
@@ -1045,7 +1487,6 @@
 
                     card.innerHTML = `
                         ${badgeHTML}
-                        <div class="slide-counter">${idx + 1} / ${bobaData.length}</div>
                         <div class="card-image-wrapper">
                             <img src="${item.img}" class="card-image" alt="${item.name}" loading="lazy">
                         </div>
@@ -1059,21 +1500,32 @@
 
                     card.addEventListener('click', () => this.openItem(item));
                     swiper.appendChild(card);
+
+                    // Add dot
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+                    dotsCont.appendChild(dot);
                 });
             }
 
             handleZoomEffect() {
                 const swiper = document.getElementById('menuSwiper');
+                const dotsCont = document.getElementById('paginationDots');
                 const updateZoom = () => {
                     const sw = swiper.getBoundingClientRect();
                     const center = sw.left + sw.width / 2;
-                    document.querySelectorAll('.menu-card').forEach(card => {
+                    const cards = document.querySelectorAll('.menu-card');
+                    const dots = dotsCont.querySelectorAll('.dot');
+
+                    cards.forEach((card, idx) => {
                         const cr = card.getBoundingClientRect();
                         const cardCenter = cr.left + cr.width / 2;
                         if (Math.abs(center - cardCenter) < 150) {
                             card.classList.add('in-focus');
+                            if (dots[idx]) dots[idx].classList.add('active');
                         } else {
                             card.classList.remove('in-focus');
+                            if (dots[idx]) dots[idx].classList.remove('active');
                         }
                     });
                 };
@@ -1102,23 +1554,43 @@
             }
 
             openItem(item) {
-                this.currentItem = item;
-                this.currentSize = 'S';
-                this.currentToppings.clear();
+                const idx = bobaData.findIndex(d => d.name === item.name);
+                this.currentModalIndex = idx >= 0 ? idx : 0;
+                this._applyModalState(item);
 
                 const overlay = document.getElementById('modalOverlay');
-                const sheet = document.getElementById('modalSheet');
+                overlay.style.display = 'block';
+                requestAnimationFrame(() => {
+                    overlay.classList.add('active');
+                    overlay.style.background = item.gradient;
+                });
+
+                document.body.style.overflow = 'hidden';
+                this._renderModalDots();
+                if (!this._modalSwipeBound) this._initModalSwipe();
+
+                // Push state for back-gesture handling
+                if (!history.state?.modalOpen) {
+                    history.pushState({ modalOpen: true }, '');
+                }
+            }
+
+            _applyModalState(item) {
+                this.currentItem = item;
+                this.currentSize = 'S';
+                this.currentSugar = '100%';
+                this.currentIce = 'Regular';
+                this.currentToppings.clear();
 
                 document.getElementById('modalImg').src = item.img;
                 document.getElementById('modalTitle').innerText = item.name;
-                sheet.style.background = item.gradient;
-                document.body.style.overflow = 'hidden'; // Lock main scroll
 
                 this.renderToppings();
                 this.updateModalPrice();
 
+                // Reset size buttons
                 document.querySelectorAll('.size-btn').forEach((btn) => {
-                    btn.classList.toggle('active', btn.dataset.size === this.currentSize);
+                    btn.classList.toggle('active', btn.dataset.size === 'S');
                     btn.onclick = (e) => {
                         e.stopPropagation();
                         this.currentSize = btn.dataset.size;
@@ -1127,8 +1599,106 @@
                     };
                 });
 
-                overlay.style.display = 'block';
-                requestAnimationFrame(() => overlay.classList.add('active'));
+                const setupSelector = (id, property) => {
+                    document.querySelectorAll(`#${id} .opt-btn`).forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.val === this[property]);
+                        btn.onclick = () => {
+                            this[property] = btn.dataset.val;
+                            document.querySelectorAll(`#${id} .opt-btn`).forEach(b => b.classList.toggle('active', b === btn));
+                        };
+                    });
+                };
+                setupSelector('sugarLevel', 'currentSugar');
+                setupSelector('iceLevel', 'currentIce');
+            }
+
+            updateModalContent(newIndex, direction) {
+                const newItem = bobaData[newIndex];
+                if (!newItem) return;
+
+                const inner = document.getElementById('modalContentInner');
+                const overlay = document.getElementById('modalOverlay');
+
+                // 1. Cross-fade out
+                inner.classList.add(direction === 'left' ? 'slide-out-left' : 'slide-out-right');
+
+                setTimeout(() => {
+                    // 2. Swap content
+                    this.currentModalIndex = newIndex;
+                    this._applyModalState(newItem);
+
+                    // 3. Morph background
+                    overlay.style.background = newItem.gradient;
+
+                    // 4. Update dots
+                    this._renderModalDots();
+
+                    // 5. Cross-fade in
+                    inner.classList.remove('slide-out-left', 'slide-out-right');
+                    inner.classList.add(direction === 'left' ? 'slide-in-left' : 'slide-in-right');
+                    setTimeout(() => inner.classList.remove('slide-in-left', 'slide-in-right'), 400);
+                }, 200);
+            }
+
+            _renderModalDots() {
+                const cont = document.getElementById('modalDots');
+                cont.innerHTML = '';
+                bobaData.forEach((_, idx) => {
+                    const d = document.createElement('div');
+                    d.className = `modal-dot ${idx === this.currentModalIndex ? 'active' : ''}`;
+                    cont.appendChild(d);
+                });
+            }
+
+            _initModalSwipe() {
+                this._modalSwipeBound = true;
+                // IMPORTANT: Attach ONLY to the hero image area, NOT the full sheet.
+                // This prevents conflict with the toppings horizontal scroller below.
+                const swipeZone = document.getElementById('modalContentInner');
+                let startX = 0, startY = 0, isDragging = false;
+
+                swipeZone.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                    isDragging = true;
+                }, { passive: true });
+
+                swipeZone.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const dx = e.touches[0].clientX - startX;
+                    const dy = e.touches[0].clientY - startY;
+                    // Only apply rubber-band if clearly horizontal
+                    if (Math.abs(dx) > Math.abs(dy) + 10) {
+                        const rubber = dx * 0.35; // dampen
+                        swipeZone.style.transform = `translateX(${rubber}px)`;
+                        swipeZone.style.transition = 'none';
+                    }
+                }, { passive: true });
+
+                swipeZone.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    const dx = e.changedTouches[0].clientX - startX;
+                    const dy = e.changedTouches[0].clientY - startY;
+                    const inner = document.getElementById('modalContentInner');
+
+                    // Reset rubber-band
+                    inner.style.transform = '';
+                    inner.style.transition = '';
+
+                    const THRESHOLD = 50;
+                    if (Math.abs(dx) > THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+                        if (dx < 0) {
+                            // Swipe left → next
+                            const next = (this.currentModalIndex + 1) % bobaData.length;
+                            this.updateModalContent(next, 'left');
+                        } else {
+                            // Swipe right → prev
+                            const prev = (this.currentModalIndex - 1 + bobaData.length) % bobaData.length;
+                            this.updateModalContent(prev, 'right');
+                        }
+                    }
+                }, { passive: true });
             }
 
             renderToppings() {
@@ -1156,11 +1726,11 @@
 
             updateModalPrice() {
                 let price = parseFloat(this.currentItem.price);
-                
+
                 // Decoy Duo Rule: Middle closer to Large
                 if (this.currentSize === 'M') price += 10;
                 if (this.currentSize === 'L') price += 12;
-                
+
                 this.currentToppings.forEach(tid => {
                     const topping = TOPPINGS.find(t => t.id === tid);
                     if (topping) price += topping.price;
@@ -1169,37 +1739,77 @@
                 document.getElementById('modalPrice').innerText = price.toFixed(0);
             }
 
-            closeModal() {
+            closeModal(fromHistory = false) {
                 const overlay = document.getElementById('modalOverlay');
+                if (!overlay || !overlay.classList.contains('active')) return;
+
                 overlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restore main scroll
+                document.body.style.overflow = '';
                 setTimeout(() => { overlay.style.display = 'none'; }, 400);
+
+                if (!fromHistory && history.state?.modalOpen) {
+                    history.back();
+                }
+            }
+
+            vibrate(ms = 10) {
+                if ('vibrate' in navigator) navigator.vibrate(ms);
             }
 
             attachListeners() {
                 document.querySelectorAll('.nav-pill').forEach(pill => {
                     pill.addEventListener('click', () => {
+                        this.vibrate(5);
                         const target = document.querySelector(`.menu-card[data-cat-id="${pill.dataset.section}"]`);
                         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                     });
                 });
 
                 document.getElementById('modalClose').onclick = () => this.closeModal();
-
                 document.getElementById('addToOrder').onclick = () => this.addToOrder();
 
-                // Shortlist listeners
-                document.getElementById('orderBar').onclick = () => this.toggleShortlist(true);
+                // Shortlist listeners (Sync Top & Bottom)
+                const openTray = () => {
+                    this.vibrate(10);
+                    this.toggleShortlist(true);
+                };
+
+                const tBtn = document.getElementById('topCartBtn');
+                if (tBtn) tBtn.onclick = openTray;
+
+                const bBar = document.getElementById('orderBar');
+                if (bBar) bBar.onclick = openTray;
+
                 document.getElementById('closeShortlist').onclick = () => this.toggleShortlist(false);
                 document.getElementById('shortlistOverlay').onclick = (e) => {
                     if (e.target === document.getElementById('shortlistOverlay')) this.toggleShortlist(false);
                 };
+
                 document.getElementById('clearSelection').onclick = () => {
+                    this.vibrate(20);
                     this.selection = [];
                     this.saveSelection();
                     this.updateOrderBar();
                     this.toggleShortlist(false);
                 };
+
+                document.getElementById('finalizeOrder').onclick = () => this.finalizeOrder();
+            }
+
+            finalizeOrder() {
+                this.vibrate([30, 50, 30]);
+                const btn = document.getElementById('finalizeOrder');
+                const originalText = btn.innerText;
+
+                const orderId = 'BB-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+                btn.style.background = '#27ae60';
+                btn.innerText = `ORDER READY: ${orderId}`;
+
+                setTimeout(() => {
+                    btn.style.background = '';
+                    btn.innerText = originalText;
+                }, 5000);
             }
 
             addToOrder() {
@@ -1209,6 +1819,8 @@
                 const itemData = {
                     ...this.currentItem,
                     size: this.currentSize,
+                    sugar: this.currentSugar,
+                    ice: this.currentIce,
                     toppings: toppingNames,
                     finalPrice: finalPrice,
                     uid: Date.now()
@@ -1229,10 +1841,13 @@
                     <div class="pill-action" style="color:white;">✓ ADDED!</div>
                 `;
 
-                // Ping the order bar
-                const bar = document.getElementById('orderBar');
-                bar.classList.add('ping');
-                setTimeout(() => bar.classList.remove('ping'), 600);
+                // Ping the selection trigger
+                const targetBtn = document.getElementById('topCartBtn') || document.getElementById('orderBar');
+                if (targetBtn) {
+                    targetBtn.classList.add('ping');
+                    setTimeout(() => targetBtn.classList.remove('ping'), 600);
+                }
+
 
                 setTimeout(() => {
                     this.closeModal();
@@ -1245,47 +1860,101 @@
                 }, 800);
             }
 
-            toggleShortlist(show) {
+            toggleShortlist(show, fromHistory = false) {
                 const overlay = document.getElementById('shortlistOverlay');
                 const modal = document.getElementById('shortlistModal');
+
+                if (!overlay) {
+                    console.error('shortlistOverlay not found!');
+                    return;
+                }
+                if (!modal) {
+                    console.error('shortlistModal not found!');
+                    return;
+                }
+
                 if (show) {
                     this.renderShortlist();
                     overlay.style.display = 'block';
-                    setTimeout(() => {
-                        overlay.classList.add('active');
-                        modal.classList.add('active');
-                    }, 10);
+
+                    // Force a reflow before adding active class
+                    void overlay.offsetHeight;
+
+                    overlay.classList.add('active');
+                    modal.classList.add('active');
+
+                    if (!history.state?.trayOpen) {
+                        history.pushState({ trayOpen: true }, '');
+                    }
+                    document.body.style.overflow = 'hidden';
                 } else {
                     overlay.classList.remove('active');
                     modal.classList.remove('active');
-                    setTimeout(() => overlay.style.display = 'none', 500);
+                    document.body.style.overflow = '';
+
+                    setTimeout(() => {
+                        if (!overlay.classList.contains('active')) {
+                            overlay.style.display = 'none';
+                        }
+                    }, 500);
+
+                    if (!fromHistory && history.state?.trayOpen) {
+                        history.back();
+                    }
                 }
             }
 
+
             renderShortlist() {
-                const content = document.getElementById('shortlistContent');
-                content.innerHTML = '';
+                const cont = document.getElementById('shortlistItems');
+                if (!cont) {
+                    return;
+                }
+                document.getElementById('receiptTime').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                cont.innerHTML = '';
 
                 if (this.selection.length === 0) {
-                    content.innerHTML = '<p style="text-align:center; padding: 2rem; opacity:0.5;">No items selected yet</p>';
+                    cont.innerHTML = '<p style="text-align:center; padding: 2rem; opacity: 0.5;">Your receipt is empty.</p>';
                     document.getElementById('shortlistTotal').innerText = '0';
                     return;
                 }
 
-                this.selection.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'shortlist-item';
-                    itemDiv.innerHTML = `
-                        <div class="shortlist-info">
+                this.selection.forEach((item) => {
+                    const div = document.createElement('div');
+                    div.className = 'summary-item';
+                    div.innerHTML = `
+                        <div class="summary-details">
                             <h4>${item.name}</h4>
-                            <p>${item.size} • ${item.toppings.length > 0 ? item.toppings.join(', ') : 'No Toppings'}</p>
+                            <p>${item.size} | ${item.sugar} Sugar | ${item.ice} Ice</p>
+                            <p style="font-size: 0.6rem; opacity: 0.6;">${item.toppings.join(', ') || 'No Toppings'}</p>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span style="font-weight: 900; color:var(--text-main);">${item.finalPrice.toFixed(0)}</span>
-                            <div class="shortlist-remove" onclick="app.removeItem(${item.uid})">REMOVE</div>
-                        </div>
+                        <div class="summary-price">${item.finalPrice.toFixed(0)}</div>
                     `;
-                    content.appendChild(itemDiv);
+
+                    // Tap to Enlarge (Staff View)
+                    div.onclick = () => {
+                        this.vibrate(5);
+                        div.classList.toggle('staff-view');
+                    };
+
+                    // Swipe-to-remove logic
+                    let startX = 0;
+                    div.addEventListener('touchstart', (e) => startX = e.touches[0].clientX, { passive: true });
+                    div.addEventListener('touchmove', (e) => {
+                        const diff = startX - e.touches[0].clientX;
+                        if (diff > 0) div.style.transform = `translateX(-${Math.min(diff, 100)}px)`;
+                    }, { passive: true });
+                    div.addEventListener('touchend', (e) => {
+                        const diff = startX - e.changedTouches[0].clientX;
+                        if (diff > 100) {
+                            div.classList.add('removed');
+                            setTimeout(() => this.removeItem(item.uid), 300);
+                        } else {
+                            div.style.transform = '';
+                        }
+                    });
+
+                    cont.appendChild(div);
                 });
 
                 const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
@@ -1293,6 +1962,7 @@
             }
 
             removeItem(uid) {
+                this.vibrate(10);
                 this.selection = this.selection.filter(i => i.uid !== uid);
                 this.saveSelection();
                 this.updateOrderBar();
@@ -1312,15 +1982,23 @@
             }
 
             updateOrderBar() {
-                const bar = document.getElementById('orderBar');
-                if (this.selection.length > 0) {
-                    bar.classList.add('active');
-                    document.getElementById('orderCount').innerText = this.selection.length;
-                    const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
-                    document.getElementById('orderTotal').innerText = total.toFixed(0);
-                } else {
-                    bar.classList.remove('active');
+                const count = this.selection.length;
+                const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
+
+                // Update Top Cart
+                const topBadge = document.getElementById('topCartBadge');
+                const topBtn = document.getElementById('topCartBtn');
+                if (topBadge) {
+                    topBadge.innerText = count;
+                    topBadge.style.display = count > 0 ? 'grid' : 'none';
                 }
+                if (topBtn) {
+                    topBtn.classList.toggle('has-items', count > 0);
+                }
+
+                // Update Shortlist Total (inside tray)
+                const sTotal = document.getElementById('shortlistTotal');
+                if (sTotal) sTotal.innerText = total.toFixed(0);
             }
         }
 
