@@ -167,13 +167,13 @@
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            height: calc(100vh - 160px);
-            height: calc(100dvh - 160px);
+            height: calc(100vh - 180px);
+            height: calc(100dvh - 180px);
             width: 100vw;
             scrollbar-width: none;
             -ms-overflow-style: none;
             background: var(--bg-dark);
-            padding: 1.5rem 0;
+            padding: 2rem 0; /* Extra padding for focused card scale */
             align-items: center;
         }
 
@@ -181,145 +181,11 @@
             display: none;
         }
 
-        /* ── Receipt / Order Slip Aesthetic ── */
-        .receipt-container {
-            font-family: 'Space Mono', monospace;
-            background: #fffcf5;
-            padding: 2.5rem 1.5rem;
-            position: relative;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e8e2d4;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        .receipt-container::after {
-            content: "";
-            position: absolute;
-            bottom: -15px;
-            left: 0;
-            right: 0;
-            height: 15px;
-            background-image: linear-gradient(135deg, #fffcf5 25%, transparent 25%), linear-gradient(225deg, #fffcf5 25%, transparent 25%);
-            background-size: 10px 30px;
-            background-position: left bottom;
-            z-index: 10;
-        }
-
-        .receipt-header {
-            text-align: center;
-            border-bottom: 2px dashed var(--accent-black);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            color: var(--accent-black);
-        }
-
-        .receipt-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .receipt-time {
-            font-size: 0.7rem;
-            opacity: 0.6;
-            margin-top: 0.5rem;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            font-size: 0.85rem;
-            background: transparent;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            position: relative;
-            touch-action: pan-y;
-            padding: 4px 0;
-            color: var(--accent-black);
-        }
-
-        .summary-item.removed {
-            transform: translateX(100%) !important;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .summary-details h4 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .summary-details p {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .summary-price {
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .total-section {
-            border-top: 2px dashed var(--accent-black);
-            padding-top: 1.5rem;
-            margin-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            color: var(--accent-black);
-        }
-
-        .total-label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .total-amount {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        .swipe-hint {
-            text-align: center;
-            font-size: 0.6rem;
-            color: #999;
-            margin-top: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-        }
-
-        .checkout-final-btn {
-            background: var(--accent-black);
-            color: white;
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-            box-shadow: 0 15px 30px rgba(60, 42, 33, 0.2);
-            margin-top: 1rem;
-        }
-
         /* ── Cards ── */
         .menu-card {
             flex: 0 0 calc(100vw - 4.5rem);
-            height: auto;
-            min-height: 520px;
+            height: calc(100% - 2rem); /* Account for swiper padding */
+            max-height: 600px;
             margin: 0 0.75rem;
             position: relative;
             scroll-snap-align: center;
@@ -335,8 +201,7 @@
             text-align: left;
             display: flex;
             flex-direction: column;
-            overflow: visible;
-            /* Let badge peek out if needed */
+            overflow: visible; /* Let badge peek out */
         }
 
         .menu-card.in-focus {
@@ -347,28 +212,31 @@
 
         .card-image-wrapper {
             width: 100%;
-            height: 320px;
-            /* Hero image height */
+            flex: 1 1 45%; 
+            min-height: 220px;
+            max-height: 350px;
             border-radius: 40px 40px 0 0;
             position: relative;
             overflow: hidden;
             background: #fdfaf5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .card-image {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* Don't crop the hero drink */
-            padding: 2.5rem;
+            padding: 2rem;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-content {
-            padding: 2rem 2.25rem 2.5rem;
+            padding: 1.5rem 2rem 2rem;
             background: white;
             border-radius: 0 0 40px 40px;
-            flex: 1;
+            flex: 0 0 auto;
             display: flex;
             flex-direction: column;
         }
@@ -381,6 +249,25 @@
             text-transform: uppercase;
             margin-bottom: 0.75rem;
             display: block;
+        }
+
+        .flavor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .flavor-tag {
+            background: #f0ede6;
+            color: var(--accent-black);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card-name {
@@ -825,356 +712,6 @@
             border-radius: 20px;
         }
 
-        .tray-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            display: none;
-            z-index: 5000;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: auto;
-        }
-
-        .tray-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* ── Shortlist Modal (receipt sheet) ── */
-        .shortlist-modal {
-            background: #fffcf5;
-            padding: 2rem 1.5rem 1rem;
-            border-radius: 32px 32px 0 0;
-            max-height: 82vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 5100;
-        }
-
-        .shortlist-modal.active {
-            transform: translateY(0);
-            box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        /* ── Receipt inner styles ── */
-        .receipt-header {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px dashed rgba(60, 42, 33, 0.15);
-            position: relative;
-        }
-
-        .receipt-title {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--accent-black);
-            text-transform: uppercase;
-        }
-
-        .receipt-time {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.9rem 0;
-            border-bottom: 1px dashed rgba(60, 42, 33, 0.1);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .summary-item.removed {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-
-        .summary-details h4 {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--accent-black);
-            margin-bottom: 3px;
-            text-transform: uppercase;
-        }
-
-        .summary-details p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        .summary-item.staff-view .summary-details h4 {
-            font-size: 1.6rem !important;
-            color: #000 !important;
-            margin-bottom: 8px;
-        }
-
-        .summary-item.staff-view .summary-details p {
-            font-size: 1.2rem !important;
-            color: #000 !important;
-            background: #fff;
-            padding: 4px 8px;
-            display: inline-block;
-            border: 2px solid #000;
-            margin-top: 6px;
-            font-weight: 900;
-        }
-
-        .summary-item.staff-view .summary-price {
-            display: none;
-        }
-
-        .summary-price {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent-black);
-            flex-shrink: 0;
-            margin-left: 1rem;
-        }
-
-        .summary-price::before {
-            content: "GHS ";
-            font-size: 0.7rem;
-            opacity: 0.6;
-        }
-
-        .total-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 0 0.5rem;
-            border-top: 2px solid var(--accent-black);
-            margin-top: 0.5rem;
-        }
-
-        .total-label {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .total-amount {
-            font-family: 'Space Mono', 'Courier New', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-black);
-        }
-
-        .receipt-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding-top: 1rem;
-            padding-bottom: env(safe-area-inset-bottom, 1rem);
-        }
-
-        .checkout-final-btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: var(--accent-black);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: var(--transition);
-            outline: none;
-        }
-
-        .checkout-final-btn:active {
-            transform: scale(0.97);
-        }
-
-        .swipe-hint {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            opacity: 0.6;
-        }
-
-        .shortlist-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--accent-gray);
-        }
-
-        .shortlist-info h4 {
-            font-size: 1rem;
-            font-weight: 800;
-            margin-bottom: 2px;
-        }
-
-        .shortlist-info p {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .shortlist-remove {
-            color: var(--badge-red);
-            font-size: 0.7rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .checkout-pill {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 1.2rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            width: 100%;
-            cursor: pointer;
-            transition: var(--transition);
-            outline: none;
-            position: relative;
-            z-index: 2;
-            flex-shrink: 0;
-            margin-bottom: env(safe-area-inset-bottom, 1rem);
-        }
-
-        .checkout-pill:active {
-            transform: scale(0.97);
-        }
-
-        .pill-price {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--accent-black);
-        }
-
-        .pill-action {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--accent-black);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ── Header Cart Icon ── */
-        .header-right {
-            display: flex;
-            justify-content: flex-end;
-            position: relative;
-        }
-
-        .header-cart {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: none;
-            border: none;
-            color: var(--accent-black);
-            cursor: pointer;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .header-cart:active {
-            transform: scale(0.9);
-        }
-
-        .cart-badge {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: var(--accent-black);
-            color: white;
-            font-size: 10px;
-            font-weight: 900;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1.5px solid var(--bg-dark);
-        }
-
-        header.scrolled .cart-badge {
-            border-color: white;
-        }
-
-        .header-cart.has-items .cart-badge {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .header-cart svg {
-            transition: var(--transition);
-        }
-
-        .header-cart.has-items svg {
-            stroke: var(--accent-primary);
-        }
-
-        @keyframes ping {
-            0% {
-                transform: scale(1);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        .ping-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--accent-primary);
-            pointer-events: none;
-            opacity: 0;
-        }
-
-        .ping .ping-layer {
-            animation: ping 0.6s ease-out;
-        }
 
         @media (min-width: 768px) {
             .modal-sheet {
@@ -1190,26 +727,9 @@
 
 <body>
     <header id="mainHeader">
-        <div class="header-left">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-        </div>
+        <div class="header-left"></div>
         <div class="brand-name">BOBA BLISS</div>
-        <div class="header-right">
-            <button class="header-cart" id="topCartBtn" aria-label="View selection">
-                <div class="ping-layer"></div>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-                    <path d="M3 6h18" />
-                    <path d="M16 10a4 4 0 0 1-8 0" />
-                </svg>
-                <div class="cart-badge" id="topCartBadge">0</div>
-            </button>
-        </div>
+        <div class="header-right"></div>
     </header>
 
     <div class="header-tools">
@@ -1226,33 +746,7 @@
 
     <div class="pagination-dots" id="paginationDots"></div>
 
-    <div class="tray-overlay" id="shortlistOverlay">
-        <div class="shortlist-modal receipt-container" id="shortlistModal" onclick="event.stopPropagation()">
-            <div class="receipt-header">
-                <div class="receipt-title">ORDER SUMMARY</div>
-                <div class="receipt-time" id="receiptTime">12.00 PM</div>
-                <button id="closeShortlist" aria-label="Close"
-                    style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;color:var(--text-muted);cursor:pointer;line-height:1;padding:0.25rem;">✕</button>
-            </div>
 
-            <div id="shortlistItems">
-                <!-- Items injected here -->
-            </div>
-
-            <div class="total-section">
-                <div class="total-label" style="font-size:0.7rem; opacity:0.8;">Show this at the counter</div>
-                <div class="total-amount" id="shortlistTotal">0</div>
-            </div>
-
-            <div class="receipt-footer">
-                <button class="checkout-final-btn" id="finalizeOrder">READY TO ORDER</button>
-                <div class="swipe-hint">← Swipe item to remove ←</div>
-                <button id="clearSelection"
-                    style="background: none; border: none; color: #999; font-size: 0.7rem; margin-top: 1rem; cursor: pointer; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Clear
-                    All</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Item detail modal -->
     <div class="modal-overlay" id="modalOverlay">
@@ -1305,14 +799,12 @@
                 <div class="toppings-grid" id="toppingsGrid"></div>
             </div>
 
-            <!-- Fixed Footer Button -->
-            <div
-                style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem; background: transparent; pointer-events: none;">
-                <button class="checkout-pill" id="addToOrder"
-                    style="box-shadow: 0 20px 40px rgba(0,0,0,0.2); pointer-events: auto;">
-                    <div class="pill-price" id="modalPrice">0</div>
-                    <div class="pill-action">+ Add to selection</div>
-                </button>
+            <!-- Fixed Footer Button (Price Calculator) -->
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem; background: transparent; pointer-events: none;">
+                <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 20px; padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); pointer-events: auto;">
+                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Est. Total</div>
+                    <div id="modalPrice" style="font-size: 1.6rem; font-weight: 900; color: var(--accent-black); font-family: 'Space Mono', monospace;">GHS 65</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1337,7 +829,8 @@
                 img: "items/KakaoTalk_Photo_2026-01-27-14-38-40.webp",
                 badge: "Limited Edition",
                 badgeType: "limited",
-                gradient: "linear-gradient(135deg,#7f5006,#f0c040)"
+                gradient: "linear-gradient(135deg,#7f5006,#f0c040)",
+                tags: ["Spiced", "Creamy"]
             },
             {
                 id: "signature",
@@ -1348,7 +841,8 @@
                 img: "items/Banana Coffee_w_ Logo.webp",
                 badge: "Chef's Catch",
                 badgeType: "best",
-                gradient: "linear-gradient(135deg,#3d2b1f,#b5882a)"
+                gradient: "linear-gradient(135deg,#3d2b1f,#b5882a)",
+                tags: ["Caffeinated", "Rich"]
             },
             {
                 id: "signature",
@@ -1359,7 +853,8 @@
                 img: "items/Banana Matcha_w_ Logo.webp",
                 badge: "Premium Choice",
                 badgeType: "new",
-                gradient: "linear-gradient(135deg,#1a5e24,#f9ca24)"
+                gradient: "linear-gradient(135deg,#1a5e24,#f9ca24)",
+                tags: ["Earthy", "Smooth"]
             },
             {
                 id: "milk-tea",
@@ -1370,7 +865,8 @@
                 img: "items/brown-sugar-milk-tea.webp",
                 badge: "Bestseller",
                 badgeType: "best",
-                gradient: "linear-gradient(135deg,#3b1a08,#7c3f1b)"
+                gradient: "linear-gradient(135deg,#3b1a08,#7c3f1b)",
+                tags: ["Sweet", "Chewy"]
             },
             {
                 id: "signature",
@@ -1379,7 +875,8 @@
                 sub: "Our secret multi-layered milk tea for pure comfort",
                 price: 55,
                 img: "items/KakaoTalk_Image_2025-01-24-15-14-47_002.webp",
-                gradient: "linear-gradient(135deg,#2c3e50,#bdc3c7)"
+                gradient: "linear-gradient(135deg,#2c3e50,#bdc3c7)",
+                tags: ["Classic", "Comfort"]
             },
             {
                 id: "smoothie",
@@ -1390,7 +887,8 @@
                 img: "items/strawberry-banana-smoothie.webp",
                 badge: "Fan Favourite",
                 badgeType: "best",
-                gradient: "linear-gradient(135deg,#d63031,#f9ca24)"
+                gradient: "linear-gradient(135deg,#d63031,#f9ca24)",
+                tags: ["Fruity", "Ice Blended"]
             },
             {
                 id: "milk-tea",
@@ -1401,7 +899,8 @@
                 img: "items/strawberry-matcha-milk-tea.webp",
                 badge: "New Arrival",
                 badgeType: "new",
-                gradient: "linear-gradient(135deg,#2d6a2f,#e87878)"
+                gradient: "linear-gradient(135deg,#2d6a2f,#e87878)",
+                tags: ["Refreshing", "Floral"]
             },
             {
                 id: "milk-tea",
@@ -1411,7 +910,8 @@
                 price: 48,
                 img: "items/Taro-Milk-Tea.webp",
                 badge: null,
-                gradient: "linear-gradient(135deg,#5e2d82,#b07fd4)"
+                gradient: "linear-gradient(135deg,#5e2d82,#b07fd4)",
+                tags: ["Nutty", "Decadent"]
             },
             {
                 id: "milk-tea",
@@ -1421,7 +921,8 @@
                 price: 48,
                 img: "items/Thai-Milk-Tea.webp",
                 badge: null,
-                gradient: "linear-gradient(135deg,#b85c00,#f0a050)"
+                gradient: "linear-gradient(135deg,#b85c00,#f0a050)",
+                tags: ["Bold", "Spiced"]
             },
             {
                 id: "fruit-tea",
@@ -1431,14 +932,14 @@
                 price: 45,
                 img: "items/peach-strawberry-fruit-tea.webp",
                 badge: null,
-                gradient: "linear-gradient(135deg,#c0392b,#f39c12)"
+                gradient: "linear-gradient(135deg,#c0392b,#f39c12)",
+                tags: ["Vegan", "Caffeine-Free"]
             }
         ];
 
         // ── App ────────────────────────────────────────────────────────────────
         class BobaApp {
             constructor() {
-                this.selection = JSON.parse(localStorage.getItem('boba_selection')) || [];
                 this.currentItem = null;
                 this.currentModalIndex = 0;
                 this.currentSize = 'S';
@@ -1453,7 +954,6 @@
                 // Handle swipe-back/back-button gestures (Rule 15 optimization)
                 window.addEventListener('popstate', (e) => {
                     this.closeModal(true);
-                    this.toggleShortlist(false, true);
                 });
 
                 // Simulate skeleton loading
@@ -1461,7 +961,6 @@
                     this.renderCards();
                     this.initScrollSync();
                     this.handleZoomEffect();
-                    this.updateOrderBar();
                 }, 1500);
 
                 this.attachListeners();
@@ -1485,6 +984,8 @@
                         ? `<div class="badge ${item.badgeType || ''}">${item.badge}</div>`
                         : '';
 
+                    const tagsHTML = item.tags ? `<div class="flavor-tags">${item.tags.map(t => `<span class="flavor-tag">${t}</span>`).join('')}</div>` : '';
+
                     card.innerHTML = `
                         ${badgeHTML}
                         <div class="card-image-wrapper">
@@ -1495,6 +996,7 @@
                             <div class="card-name">${item.name}</div>
                             <div class="card-sub">${item.sub}</div>
                             <div class="card-price-main">${item.price}</div>
+                            ${tagsHTML}
                         </div>
                     `;
 
@@ -1725,18 +1227,19 @@
             }
 
             updateModalPrice() {
-                let price = parseFloat(this.currentItem.price);
+                let basePrice = parseFloat(this.currentItem.price);
 
-                // Decoy Duo Rule: Middle closer to Large
-                if (this.currentSize === 'M') price += 10;
-                if (this.currentSize === 'L') price += 12;
+                // Size Upcharges
+                if (this.currentSize === 'M') basePrice += 10;
+                if (this.currentSize === 'L') basePrice += 12;
 
+                // Topping Upcharges
                 this.currentToppings.forEach(tid => {
                     const topping = TOPPINGS.find(t => t.id === tid);
-                    if (topping) price += topping.price;
+                    if (topping) basePrice += topping.price;
                 });
 
-                document.getElementById('modalPrice').innerText = price.toFixed(0);
+                document.getElementById('modalPrice').innerText = 'GHS ' + basePrice.toFixed(0);
             }
 
             closeModal(fromHistory = false) {
@@ -1766,239 +1269,15 @@
                 });
 
                 document.getElementById('modalClose').onclick = () => this.closeModal();
-                document.getElementById('addToOrder').onclick = () => this.addToOrder();
-
-                // Shortlist listeners (Sync Top & Bottom)
-                const openTray = () => {
-                    this.vibrate(10);
-                    this.toggleShortlist(true);
-                };
-
-                const tBtn = document.getElementById('topCartBtn');
-                if (tBtn) tBtn.onclick = openTray;
-
-                const bBar = document.getElementById('orderBar');
-                if (bBar) bBar.onclick = openTray;
-
-                document.getElementById('closeShortlist').onclick = () => this.toggleShortlist(false);
-                document.getElementById('shortlistOverlay').onclick = (e) => {
-                    if (e.target === document.getElementById('shortlistOverlay')) this.toggleShortlist(false);
-                };
-
-                document.getElementById('clearSelection').onclick = () => {
-                    this.vibrate(20);
-                    this.selection = [];
-                    this.saveSelection();
-                    this.updateOrderBar();
-                    this.toggleShortlist(false);
-                };
-
-                document.getElementById('finalizeOrder').onclick = () => this.finalizeOrder();
-            }
-
-            finalizeOrder() {
-                this.vibrate([30, 50, 30]);
-                const btn = document.getElementById('finalizeOrder');
-                const originalText = btn.innerText;
-
-                const orderId = 'BB-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-
-                btn.style.background = '#27ae60';
-                btn.innerText = `ORDER READY: ${orderId}`;
-
-                setTimeout(() => {
-                    btn.style.background = '';
-                    btn.innerText = originalText;
-                }, 5000);
-            }
-
-            addToOrder() {
-                const finalPrice = parseFloat(document.getElementById('modalPrice').innerText);
-                const toppingNames = Array.from(this.currentToppings).map(tid => TOPPINGS.find(t => t.id === tid).name);
-
-                const itemData = {
-                    ...this.currentItem,
-                    size: this.currentSize,
-                    sugar: this.currentSugar,
-                    ice: this.currentIce,
-                    toppings: toppingNames,
-                    finalPrice: finalPrice,
-                    uid: Date.now()
-                };
-
-                this.selection.push(itemData);
-                this.saveSelection();
-                if ('vibrate' in navigator) navigator.vibrate([20, 50, 20]);
-                this.updateOrderBar();
-
-                // Success State Animation
-                const btn = document.getElementById('addToOrder');
-                const originalContent = btn.innerHTML;
-                btn.style.background = '#27ae60';
-                btn.style.borderColor = '#27ae60';
-                btn.innerHTML = `
-                    <div style="color:white; font-size:1.5rem; font-weight:900;">${finalPrice.toFixed(0)}</div>
-                    <div class="pill-action" style="color:white;">✓ ADDED!</div>
-                `;
-
-                // Ping the selection trigger
-                const targetBtn = document.getElementById('topCartBtn') || document.getElementById('orderBar');
-                if (targetBtn) {
-                    targetBtn.classList.add('ping');
-                    setTimeout(() => targetBtn.classList.remove('ping'), 600);
-                }
-
-
-                setTimeout(() => {
-                    this.closeModal();
-                    // Reset button after modal close transition
-                    setTimeout(() => {
-                        btn.style.background = '';
-                        btn.style.borderColor = '';
-                        btn.innerHTML = originalContent;
-                    }, 500);
-                }, 800);
-            }
-
-            toggleShortlist(show, fromHistory = false) {
-                const overlay = document.getElementById('shortlistOverlay');
-                const modal = document.getElementById('shortlistModal');
-
-                if (!overlay) {
-                    console.error('shortlistOverlay not found!');
-                    return;
-                }
-                if (!modal) {
-                    console.error('shortlistModal not found!');
-                    return;
-                }
-
-                if (show) {
-                    this.renderShortlist();
-                    overlay.style.display = 'block';
-
-                    // Force a reflow before adding active class
-                    void overlay.offsetHeight;
-
-                    overlay.classList.add('active');
-                    modal.classList.add('active');
-
-                    if (!history.state?.trayOpen) {
-                        history.pushState({ trayOpen: true }, '');
-                    }
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    overlay.classList.remove('active');
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-
-                    setTimeout(() => {
-                        if (!overlay.classList.contains('active')) {
-                            overlay.style.display = 'none';
-                        }
-                    }, 500);
-
-                    if (!fromHistory && history.state?.trayOpen) {
-                        history.back();
-                    }
-                }
-            }
-
-
-            renderShortlist() {
-                const cont = document.getElementById('shortlistItems');
-                if (!cont) {
-                    return;
-                }
-                document.getElementById('receiptTime').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                cont.innerHTML = '';
-
-                if (this.selection.length === 0) {
-                    cont.innerHTML = '<p style="text-align:center; padding: 2rem; opacity: 0.5;">Your receipt is empty.</p>';
-                    document.getElementById('shortlistTotal').innerText = '0';
-                    return;
-                }
-
-                this.selection.forEach((item) => {
-                    const div = document.createElement('div');
-                    div.className = 'summary-item';
-                    div.innerHTML = `
-                        <div class="summary-details">
-                            <h4>${item.name}</h4>
-                            <p>${item.size} | ${item.sugar} Sugar | ${item.ice} Ice</p>
-                            <p style="font-size: 0.6rem; opacity: 0.6;">${item.toppings.join(', ') || 'No Toppings'}</p>
-                        </div>
-                        <div class="summary-price">${item.finalPrice.toFixed(0)}</div>
-                    `;
-
-                    // Tap to Enlarge (Staff View)
-                    div.onclick = () => {
-                        this.vibrate(5);
-                        div.classList.toggle('staff-view');
-                    };
-
-                    // Swipe-to-remove logic
-                    let startX = 0;
-                    div.addEventListener('touchstart', (e) => startX = e.touches[0].clientX, { passive: true });
-                    div.addEventListener('touchmove', (e) => {
-                        const diff = startX - e.touches[0].clientX;
-                        if (diff > 0) div.style.transform = `translateX(-${Math.min(diff, 100)}px)`;
-                    }, { passive: true });
-                    div.addEventListener('touchend', (e) => {
-                        const diff = startX - e.changedTouches[0].clientX;
-                        if (diff > 100) {
-                            div.classList.add('removed');
-                            setTimeout(() => this.removeItem(item.uid), 300);
-                        } else {
-                            div.style.transform = '';
-                        }
-                    });
-
-                    cont.appendChild(div);
-                });
-
-                const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
-                document.getElementById('shortlistTotal').innerText = total.toFixed(0);
-            }
-
-            removeItem(uid) {
-                this.vibrate(10);
-                this.selection = this.selection.filter(i => i.uid !== uid);
-                this.saveSelection();
-                this.updateOrderBar();
-                this.renderShortlist();
-                if (this.selection.length === 0) this.toggleShortlist(false);
-            }
-
-            saveSelection() {
-                localStorage.setItem('boba_selection', JSON.stringify(this.selection));
             }
 
             attachHeaderScroll() {
                 const header = document.getElementById('mainHeader');
                 window.addEventListener('scroll', () => {
-                    header.classList.toggle('scrolled', window.scrollY > 10);
+                    if(header) {
+                        header.classList.toggle('scrolled', window.scrollY > 10);
+                    }
                 }, { passive: true });
-            }
-
-            updateOrderBar() {
-                const count = this.selection.length;
-                const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
-
-                // Update Top Cart
-                const topBadge = document.getElementById('topCartBadge');
-                const topBtn = document.getElementById('topCartBtn');
-                if (topBadge) {
-                    topBadge.innerText = count;
-                    topBadge.style.display = count > 0 ? 'grid' : 'none';
-                }
-                if (topBtn) {
-                    topBtn.classList.toggle('has-items', count > 0);
-                }
-
-                // Update Shortlist Total (inside tray)
-                const sTotal = document.getElementById('shortlistTotal');
-                if (sTotal) sTotal.innerText = total.toFixed(0);
             }
         }
 
