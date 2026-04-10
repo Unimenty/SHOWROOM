@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gourmet Menu | Digital Sales Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Outfit:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-light: #ffffff;
+            --bg-offset: #fafafa;
+            --accent-black: #111111;
+            --accent-gray: #eeeeee;
+            --text-main: #1d1d1f;
+            --text-muted: #6e6e73;
+            --card-white: #ffffff;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+            /* Psychology Badge Colors */
+            --badge-red: #E30613;
+            /* Urgency/Spice */
+            --badge-gold: #D4AF37;
+            /* Signature/Premium */
+            --badge-green: #27ae60;
+            /* Fresh/Healthy */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.4;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .brand-font {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        /* --- Global Interactive Sizing --- */
+        .nav-item,
+        .combo-card,
+        .menu-card,
+        button,
+        .choice-item,
+        .add-ico {
+            touch-action: manipulation;
+        }
+
+        /* --- Header & Compressed Sticky Logo --- */
+        /* --- Universal Sticky Header --- */
+        header {
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-light);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+            transition: var(--transition);
+            height: 60px;
+        }
+
+        header.scrolled {
+            height: 50px;
+        }
+
+        .header-tools {
+            background: var(--bg-light);
+            padding: 0.5rem 1.5rem 1.2rem 1.5rem; /* Tightened top padding */
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid var(--accent-black);
+        }
+
+        header.scrolled + .header-tools {
+            top: 50px;
+        }
+
+        .header-left,
+        .header-right {
+            display: flex;
+            align-items: center;
+            width: 44px;
+            /* Force symmetry for logo centering */
+        }
+
+        .header-right {
+            justify-content: flex-end;
+        }
+
+        .brand-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--accent-black);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -1.2px;
+            text-transform: uppercase;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* --- Toggling Search & Tools --- */
+        /* Removed redundant .header-tools block */
+
+        .search-container {
+            margin-bottom: 0;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(-10px);
+        }
+
+        .search-container.active {
+            max-height: 100px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-bottom: 1rem;
+            padding-top: 0.8rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--accent-gray);
+            background: #f8f8f8;
+            font-size: 0.85rem;
+            font-weight: 500;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            background: white;
+            border-color: var(--accent-black);
+        }
+
+        /* --- Category Overlay (Burger Menu) --- */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 3rem;
+            font-weight: 200;
+            cursor: pointer;
+        }
+
+        .category-grid-full {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: calc(100% - 3rem);
+            max-width: 500px;
+        }
+
+        .overlay-cat-card {
+            aspect-ratio: 1/1;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .overlay-cat-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+            transition: var(--transition);
+        }
+
+        .overlay-cat-card:active img {
+            transform: scale(1.1);
+        }
+
+        .overlay-cat-text {
+            position: absolute;
+            bottom: 1.25rem;
+            left: 1.25rem;
+            color: white;
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .category-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.6rem;
+            scrollbar-width: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-pill {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: #f2f2f2;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 800;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+        }
+
+        .nav-pill.active {
+            background: var(--accent-black);
+            color: white;
+        }
+
+        /* --- Combo Section redesign --- */
+        /* --- Combo Section redesign (3D Slider) --- */
+        .combo-section {
+            padding: 3rem 0;
+            background: var(--accent-gray);
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .section-header {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .combo-carousel {
+            display: flex;
+            overflow-x: auto;
+            padding: 1.5rem 0;
+            gap: 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            perspective: 2000px;
+        }
+
+        .combo-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .combo-card {
+            flex: 0 0 90%;
+            /* Increased 20% for impact */
+            margin: 0 5%;
+            background: var(--accent-black);
+            padding: 2.5rem;
+            border-radius: 12px;
+            scroll-snap-align: center;
+            min-height: 220px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.3;
+            transform: scale(0.9);
+            color: white;
+        }
+
+        .combo-card.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .combo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .combo-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .combo-number {
+            background: white;
+            color: black;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .combo-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .combo-includes {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .combo-price-tag {
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: right;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1.2rem;
+            color: #fff;
+        }
+
+        /* --- CARD GRID --- */
+        .menu-container {
+            padding: 1.5rem;
+            padding-bottom: 8rem;
+        }
+
+        .menu-group {
+            margin-bottom: 4rem;
+        }
+
+        .group-title {
+            color: var(--accent-black);
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-bottom: 4px solid var(--accent-black);
+            display: inline-block;
+            padding-bottom: 0.2rem;
+        }
+
+        .card-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .menu-card {
+            background: var(--card-white);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            /* Images on top */
+            align-items: stretch;
+            border: 1px solid var(--accent-gray);
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .menu-card:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Standardized Premium Sizing --- */
+        .menu-card {
+            min-height: 280px;
+        }
+
+        .card-image-wrapper {
+            width: 100%;
+            /* Full width */
+            height: 180px;
+            /* Standardized 'Perfect' Height */
+            flex-shrink: 0;
+            background: var(--accent-gray);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Removed height overrides for consistency */
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .menu-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            min-width: 0;
+            /* Prevents overflow */
+        }
+
+        .card-header {
+            margin-bottom: 0.2rem;
+        }
+
+        .card-name {
+            font-weight: 800;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            color: var(--text-main);
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-price {
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .menu-card.size-sm .card-price {
+            display: none;
+        }
+
+        /* Hide for compact */
+
+        .card-bottom {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-price-main {
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--accent-black);
+        }
+
+        .menu-card.size-sm .card-price-main {
+            font-size: 0.95rem;
+        }
+
+        /* --- MODAL (Native CSS Animations) --- */
+        .signature-item {
+            margin-top: 1rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .signature-badge {
+            position: absolute;
+            top: -12px;
+            left: 1.25rem;
+            background: var(--accent-black);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .signature-item .menu-card {
+            border-width: 2px;
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Psychology Badges --- */
+        .item-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        .badge-urgent {
+            background: var(--badge-red);
+            color: white;
+        }
+
+        .badge-premium {
+            background: var(--badge-gold);
+            color: white;
+        }
+
+        .badge-health {
+            background: var(--badge-green);
+            color: white;
+        }
+
+        /* --- Scroll Shadow (Principle 17) --- */
+        .viewport-shadow {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent);
+            pointer-events: none;
+            z-index: 90;
+            transition: var(--transition);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-light);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.5s var(--transition);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-sheet {
+            background: white;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 0 0 4rem;
+            /* Reduced padding since button isn't floating */
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal-sheet {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-hero-image {
+            width: 100%;
+            height: 38vh;
+            object-fit: cover;
+            background: var(--accent-gray);
+        }
+
+        .modal-close-btn {
+            position: fixed;
+            top: 2rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-body {
+            padding: 2.5rem 1.5rem;
+        }
+
+        .modal-header-content {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-black);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .modal-sub {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .modal-price {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 0;
+            color: var(--accent-black);
+            letter-spacing: -2px;
+        }
+
+        .customization-section {
+            padding-top: 2rem;
+            border-top: 1px solid var(--accent-gray);
+        }
+
+        .custom-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .custom-label {
+            font-size: 0.8rem;
+            color: var(--accent-black);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            display: block;
+            font-weight: 900;
+        }
+
+        .custom-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .custom-option {
+            border: 2px solid var(--accent-gray);
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .custom-option small {
+            font-size: 0.65rem;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+
+        .custom-option.selected {
+            border-color: var(--accent-black);
+            background: var(--accent-black);
+            color: white;
+        }
+
+        .action-button {
+            width: calc(100% - 3rem);
+            margin: 0 auto 3rem;
+            background: var(--accent-black);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        /* --- Order Slip UI --- */
+        .order-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            width: 90%;
+            max-width: 400px;
+            background: var(--accent-black);
+            color: white;
+            padding: 1.25rem 2rem;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .order-bar.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .order-count {
+            background: white;
+            color: black;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+
+        .order-label {
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* --- Receipt Aesthetic --- */
+        .receipt-container {
+            font-family: 'Space Mono', monospace;
+            background: white;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ddd;
+        }
+
+        .receipt-container::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background-image: linear-gradient(135deg, white 25%, transparent 25%), linear-gradient(225deg, white 25%, transparent 25%);
+            background-size: 10px 30px;
+            background-position: left bottom;
+            z-index: 10;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .receipt-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            background: white;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        .summary-item.swiping {
+            transition: none;
+        }
+
+        .summary-item.removed {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .swipe-hint {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #999;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summary-details h4 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        .total-section {
+            border-top: 2px dashed #000;
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .total-label {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .total-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        /* Reveal Animations */
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pop Animation */
+        @keyframes pop {
+            0% {
+                transform: scale(1) translateX(-50%);
+            }
+
+            50% {
+                transform: scale(1.1) translateX(-45%);
+            }
+
+            100% {
+                transform: scale(1) translateX(-50%);
+            }
+        }
+
+        .pop-anim {
+            animation: pop 0.3s ease;
+        }
+
+        /* --- Desktop Optimization (Principle 15: Adaptive Hierarchy) --- */
+        @media (min-width: 768px) {
+            header, .header-tools {
+                display: flex;
+                justify-content: center;
+                background: var(--bg-light);
+            }
+
+            .header-tools {
+                flex-direction: column;
+                align-items: center;
+                padding-bottom: 1.5rem;
+                padding-top: 0; /* Remove gap from tools top */
+            }
+
+            header {
+                padding-bottom: 0; /* Align perfectly with tools below */
+            }
+
+            .brand-name {
+                font-size: 1.5rem;
+                max-width: 1200px;
+            }
+
+            .menu-container, 
+            .combo-section {
+                max-width: 1200px;
+                margin: 0 auto !important;
+                padding: 2rem;
+            }
+
+            .card-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+                gap: 2.5rem;
+                align-items: start;
+            }
+
+            .menu-card {
+                min-height: 420px;
+            }
+
+            .card-image-wrapper {
+                height: 240px;
+            }
+
+            .category-nav {
+                justify-content: center;
+                width: 100%;
+                gap: 1.5rem;
+            }
+
+            .nav-pill {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .search-container {
+                width: 100%;
+                max-width: 600px;
+            }
+
+            .combo-section {
+                text-align: center;
+            }
+
+            .combo-carousel {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3rem; /* Significant vertical gaps */
+                overflow-x: visible;
+                padding: 3rem 0;
+            }
+
+            .combo-card {
+                flex: none;
+                width: 100%;
+                max-width: 800px; /* Bigger dimensions but contained */
+                min-height: 380px; /* Increased height */
+                padding: 3rem;
+            }
+
+            .combo-title {
+                font-size: 2.2rem;
+            }
+
+            .combo-price-tag {
+                font-size: 3rem;
+                margin-top: 1.5rem;
+            }
+
+            /* --- Modal Optimization --- */
+            .modal-sheet {
+                max-width: 800px;
+                height: auto;
+                max-height: 90vh;
+                border-radius: 32px;
+                margin: 2rem auto;
+                box-shadow: 0 30px 100px rgba(0,0,0,0.2);
+            }
+
+            .modal-hero-image {
+                height: 400px; /* Controlled height */
+                border-radius: 32px 32px 0 0;
+            }
+
+            .action-button {
+                position: sticky;
+                bottom: 0;
+                width: 100%;
+                border-radius: 0 0 32px 32px;
+            }
+
+            .section-header {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="viewport-shadow" id="scrollIndicator"></div>
+
+    <div class="order-bar" id="orderBar">
+        <div class="order-count" id="orderCount">0</div>
+        <div class="order-label">Your Order Slip</div>
+        <div class="order-price" id="orderTotalPrice">0</div>
+    </div>
+
+    <header id="mainHeader">
+        <div class="header-left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </div>
+        <div class="brand-name">DINING DEMO</div>
+        <div class="header-right">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"
+                stroke-linecap="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+            </svg>
+        </div>
+    </header>
+
+    <div class="header-tools" id="headerTools">
+        <div class="search-container" id="searchContainer">
+            <input type="text" id="menuSearch" class="search-input" placeholder="Search for your favorites...">
+        </div>
+        <nav class="category-nav" id="categoryNav">
+            <div class="nav-pill active" data-section="combos">COMBOS</div>
+            <div class="nav-pill" data-section="burgers">MAINS</div>
+            <div class="nav-pill" data-section="wings">PLATES</div>
+            <div class="nav-pill" data-section="sides">SIDES</div>
+            <div class="nav-pill" data-section="desserts">SWEETS</div>
+            <div class="nav-pill" data-section="beverages">DRINKS</div>
+        </nav>
+    </div>
+
+    <!-- Burger Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay">
+        <div class="overlay-close" id="overlayClose">&times;</div>
+        <div class="category-grid-full">
+            <div class="overlay-cat-card" data-section="burgers">
+                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=400" alt="Burgers">
+                <div class="overlay-cat-text">Burgers</div>
+            </div>
+            <div class="overlay-cat-card" data-section="wings">
+                <img src="https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400" alt="Wings">
+                <div class="overlay-cat-text">Wings</div>
+            </div>
+            <div class="overlay-cat-card" data-section="sides">
+                <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?w=400" alt="Sides">
+                <div class="overlay-cat-text">Sides</div>
+            </div>
+            <div class="overlay-cat-card" data-section="beverages">
+                <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&h=450&fit=crop" alt="Drinks">
+                <div class="overlay-cat-text">Drinks</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="combo-section" id="combos">
+        <div class="section-header">
+            <h2>EXCLUSIVE COMBOS</h2>
+        </div>
+        <div class="combo-carousel" id="comboCarousel">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <main class="menu-container" id="menuContainer">
+        <!-- Populated by JS -->
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-sheet">
+            <div class="modal-close-btn" id="modalCloseBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </div>
+
+            <img id="modalImg" src="" alt="" class="modal-hero-image">
+
+            <div class="modal-body">
+                <div class="modal-header-content">
+                    <div id="modalTitle" class="modal-title">Item Name</div>
+                    <div id="modalSub" class="modal-sub">Description goes here</div>
+                    <div id="modalPrice" class="modal-price">0.00</div>
+                </div>
+
+                <div class="customization-section" id="customContent">
+                    <!-- Dynamically injected -->
+                </div>
+            </div>
+
+            <button class="action-button" id="addOrderBtn">Add to Order</button>
+        </div>
+    </div>
+
+    <!-- Order Summary Modal (Receipt Style) -->
+    <div class="modal-overlay" id="orderSummaryModal">
+        <div class="modal-sheet" style="background: #eee; padding: 2rem 1.5rem;">
+            <div class="modal-close-btn" id="summaryCloseBtn" style="top: 1rem; right: 1rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </div>
+
+            <div class="receipt-container">
+                <div class="receipt-header">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="receipt-title">Order Slip</div>
+                        <button id="clearAllBtn"
+                            style="background: none; border: none; font-family: 'Space Mono', monospace; font-size: 0.6rem; text-decoration: underline; cursor: pointer; color: var(--badge-red); font-weight: 700;">[CLEAR
+                            ALL]</button>
+                    </div>
+                    <div style="font-size: 0.7rem;">TABLE: DEMO | SERVER: AI</div>
+                    <div id="receiptTime" style="font-size: 0.7rem; margin-top: 0.2rem;"></div>
+                </div>
+
+                <div id="summaryContent" style="overflow-x: hidden;">
+                    <!-- Dynamic Items -->
+                </div>
+
+                <div class="swipe-hint">Swipe item to remove from slip</div>
+
+                <div class="total-section">
+                    <div class="total-label">TOTAL</div>
+                    <div id="summaryTotal" class="total-amount">0</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem; font-size: 0.7rem; color: #555;">
+                    ****************************<br>
+                    PLEASE SHOW THIS TO YOUR SERVER<br>
+                    THANK YOU FOR DINING
+                </div>
+            </div>
+
+            <button class="action-button" id="closeSlipBtn" style="background: #333; margin-top: 3rem;">Close
+                Slip</button>
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            combos: [
+                { id: "01", title: "Signature Family Feast", includes: "2 Large Main Dishes, 2 Large Sides, 2 Premium Drinks", price: "299" },
+                { id: "02", title: "Premium Date Night", includes: "2 Choice Entrées, 2 Regular Sides, 2 Signature Drinks", price: "249" },
+                { id: "03", title: "The Executive Solo", includes: "1 Prime Selection, 1 Side, 1 Beverage", price: "185" }
+            ],
+            categories: [
+                {
+                    id: "burgers",
+                    name: "Gourmet Selections",
+                    items: [
+                        { name: "Grand Grill Signature", price: "165", sub: "Triple-stacked prime beef, triple melted aged cheddar, secret house glaze", img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&h=450&fit=crop", badge: "Premium" },
+                        { name: "Velvety Mushroom Swiss", price: "135", sub: "Gourmet grilled patty, sautéed forest mushrooms, melted swiss cream", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=450&fit=crop", badge: "Popular" },
+                        { name: "Smokey Double Melt", price: "125", sub: "Two layers of melted sharp cheddar, hickory-smoked reserve sauce", img: "https://images.unsplash.com/photo-1551782450-17144efb9c50?w=600&h=450&fit=crop" },
+                        { name: "Crunchy Zesty Fillet", price: "99", sub: "Premium spice-glazed fillet with cooling house ranch drizzle", img: "https://www.vinhhoan.com/wp-content/uploads/2021/09/Crunchy-Breaded-Fillet-scaled.jpg", badge: "Spicy" },
+                        { name: "Crispy Gold Original", price: "99", sub: "The original 11-spice hand-breaded golden signature fillet", img: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&h=450&fit=crop" }
+                    ]
+                },
+                {
+                    id: "wings",
+                    name: "Signature Plates",
+                    items: [
+                        { name: "The Platter (12 Pcs)", price: "199", sub: "Perfect for sharing. Choice of 2 artisanal house sauces", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&h=450&fit=crop", badge: "Chef's Choice" },
+                        { name: "Half Platter (6 Pcs)", price: "109", sub: "Juicy flame-grilled selections with our signature house spice", img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=600&h=450&fit=crop" },
+                        { name: "Honey Garlic Tenders", price: "129", sub: "4 hand-breaded cuts tossed in locally sourced garlic nectar", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGRuuuVNkArH3S8wdh3qGuKuYzk2R4d6LOrg&s" },
+                        { name: "Zesty BBQ Wings", price: "119", sub: "Smokey, charred, and tossed in our world-famous glaze", img: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=600&h=450&fit=crop", badge: "Popular" },
+                        { name: "Peri-Peri Skewers", price: "145", sub: "Three prime cuts grilled over open flame with citrus spice", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStkFlR4NcnNmPYKKw7Le58CpTqZ1YE5imrNw&s?w=600&h=450&fit=crop" }
+                    ]
+                },
+                {
+                    id: "sides",
+                    name: "Artisanal Sides",
+                    items: [
+                        { name: "Hand-Cut Loaded Fries (L)", price: "99", sub: "Cheddar melt, house fire sauce, and crispy chicken bits", img: "https://www.queensleeappetit.com/wp-content/uploads/2018/01/Loaded-Cheese-Fries-2-480x480.jpg", badge: "Value" },
+                        { name: "Hand-Cut Fries (M)", price: "79", sub: "The perfect decoy for the large", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSBt5RdbNGN2PopQ1ox14cVQI7tiXglqrAIA&s" },
+                        { name: "Mozzarella Melt Sticks", price: "79", sub: "6pcs stringy mozzarella with house marinara dip", img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?w=600&h=450&fit=crop" },
+                        { name: "Onion Ring Stack", price: "69", sub: "Thick cut, beer-battered, and golden-crisped", img: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=600&h=450&fit=crop" },
+                        { name: "Golden Jasmine Rice", price: "54", sub: "Fragrant fried rice infused with signature spices", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS12J5nnrSe2ACAtBR_zNNNEU853DrzmhM-tA&s" }
+                    ]
+                },
+                {
+                    id: "desserts",
+                    name: "Sweet Endings",
+                    items: [
+                        { name: "Double Choc Brownie", price: "89", sub: "Warm fudge brownie topped with sea salt flakes", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIzmbySkOEQSrSvM9BKtzXFoMwyUtxoDA0tg&s", badge: "Popular" },
+                        { name: "Gourmet Vanilla Shake", price: "74", sub: "Made with 100% real dairy vanilla bean custard", img: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&h=450&fit=crop" }
+                    ]
+                },
+                {
+                    id: "beverages",
+                    name: "Cold Refreshments",
+                    items: [
+                        { name: "Artisanal Iced Tea", price: "34", sub: "Select premium house-brewed flavors", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=450&fit=crop" },
+                        { name: "Premium Craft Lager", price: "29", sub: "500ml Chilled locally-sourced brew", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&h=450&fit=crop" },
+                        { name: "Sparkling Soda Can", price: "14", sub: "Refreshing 330ml Chilled Selection", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFJO4rbtY_dPjHbUVejF3NLBdpMYNOhhnd0Q&s" }
+                    ]
+                }
+            ]
+        };
+
+        const customizationOptions = {
+            burgers: [
+                { title: "Gourmet Add-ons", items: [{ name: "Double Melt Cheese", price: 15 }, { name: "Hickory Bacon", price: 25 }, { name: "Guacamole Scoop", price: 20 }, { name: "Fried Egg", price: 10 }] },
+                { title: "Remove Ingredients", items: [{ name: "No Onions", price: 0 }, { name: "No Pickles", price: 0 }, { name: "No Lettuce", price: 0 }, { name: "No Sauce", price: 0 }] }
+            ],
+            wings: [
+                { title: "Flavor Profile", items: [{ name: "Extra Spicy", price: 5 }, { name: "More Glaze", price: 5 }, { name: "Dry Seasoning", price: 0 }, { name: "No Spice", price: 0 }] },
+                { title: "Wing Type", items: [{ name: "All Flats", price: 20 }, { name: "All Drums", price: 15 }] }
+            ],
+            sides: [
+                { title: "Side Upgrades", items: [{ name: "Add Truffle Oil", price: 30 }, { name: "Add Cheese Sauce", price: 15 }, { name: "Extra Crispy", price: 0 }] }
+            ],
+            drinks: [
+                { title: "Liquid Adjustments", items: [{ name: "Less Ice", price: 0 }, { name: "No Ice", price: 0 }, { name: "Extra Sweet", price: 5 }] }
+            ],
+            desserts: [
+                { title: "Sweet Add-ons", items: [{ name: "Extra Whipped Cream", price: 10 }, { name: "Chocolate Drizzle", price: 10 }, { name: "Caramel Sauce", price: 10 }] }
+            ]
+        };
+
+        class MenuApp {
+            constructor() {
+                this.currentItem = null;
+                this.order = [];
+                this.isAutoScrolling = false;
+                this.scrollTimeout = null;
+                this.touchStartX = 0;
+                this.touchCurrentX = 0;
+                this.searchTimeout = null;
+                this.scrollThrottle = false;
+
+                this.init();
+            }
+
+            init() {
+                this.renderCombos();
+                this.renderMenu();
+                this.attachGlobalListeners();
+                this.setupScrollSync();
+                this.setupRevealObserver();
+            }
+
+            attachGlobalListeners() {
+                window.addEventListener('scroll', () => {
+                    if (this.scrollThrottle) return;
+                    this.scrollThrottle = true;
+                    requestAnimationFrame(() => {
+                        const header = document.getElementById('mainHeader');
+                        header.classList.toggle('scrolled', window.scrollY > 30);
+                        this.scrollThrottle = false;
+                    });
+                });
+
+                document.getElementById('headerTools').addEventListener('click', (e) => {
+                    const pill = e.target.closest('.nav-pill');
+                    if (pill) {
+                        const sectionId = pill.getAttribute('data-section');
+                        this.scrollToSection(sectionId);
+                    }
+                });
+
+                document.querySelector('.header-left').addEventListener('click', () => this.toggleMenu(true));
+                document.querySelector('.header-right').addEventListener('click', () => this.toggleSearch());
+                document.getElementById('overlayClose').addEventListener('click', () => this.toggleMenu(false));
+                document.getElementById('modalCloseBtn').addEventListener('click', () => this.closeModal('modalOverlay'));
+                document.getElementById('summaryCloseBtn').addEventListener('click', () => this.closeModal('orderSummaryModal'));
+                document.getElementById('closeSlipBtn').addEventListener('click', () => this.closeModal('orderSummaryModal'));
+                document.getElementById('addOrderBtn').addEventListener('click', () => this.addItemToOrder());
+                document.getElementById('clearAllBtn').addEventListener('click', () => this.clearOrder());
+                document.getElementById('orderBar').addEventListener('click', () => this.openOrderSummary());
+
+                document.querySelectorAll('.overlay-cat-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const sectionId = card.getAttribute('data-section');
+                        this.scrollToSection(sectionId);
+                        this.toggleMenu(false);
+                    });
+                });
+
+                document.getElementById('menuSearch').addEventListener('input', () => this.handleSearch());
+            }
+
+            renderCombos() {
+                const carousel = document.getElementById('comboCarousel');
+                menuData.combos.forEach(combo => {
+                    const card = document.createElement('div');
+                    card.className = 'combo-card';
+                    card.innerHTML = `
+                        <div class="combo-info">
+                            <div class="combo-number">#${combo.id}</div>
+                            <div class="combo-title brand-font">${combo.title}</div>
+                            <div class="combo-includes">${combo.includes}</div>
+                        </div>
+                        <div class="combo-price-tag">${combo.price}</div>
+                    `;
+                    card.addEventListener('click', () => {
+                        this.openItem({
+                            name: `Combo #${combo.id}`,
+                            price: combo.price,
+                            sub: combo.title,
+                            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2Z1lMt9gKTCBi6gRpp6iRzjDoOScs-v0W_S0zlL0rYg&s=10"
+                        }, ['burgers', 'wings']);
+                    });
+                    carousel.appendChild(card);
+                });
+                this.setupCarouselObserver();
+            }
+
+            renderMenu() {
+                const container = document.getElementById('menuContainer');
+                menuData.categories.forEach(cat => {
+                    const group = document.createElement('div');
+                    group.className = 'menu-group';
+                    group.id = cat.id;
+                    group.innerHTML = `<h3 class="group-title brand-font">${cat.name}</h3>`;
+
+                    const grid = document.createElement('div');
+                    grid.className = 'card-grid';
+
+                    let sizeClass = (cat.id === 'burgers') ? 'size-lg' :
+                        (cat.id === 'sides' || cat.id === 'beverages') ? 'size-sm' : 'size-md';
+
+                    cat.items.forEach((item, index) => {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'reveal-card';
+                        if (index === 0) {
+                            wrap.classList.add('signature-item');
+                            wrap.innerHTML = `<div class="signature-badge">Elite Select</div>`;
+                        }
+
+                        const card = document.createElement('div');
+                        card.className = `menu-card ${sizeClass}`;
+
+                        let badgeHTML = item.badge ? `<div class="item-badge badge-${item.badge.toLowerCase() === 'popular' ? 'premium' : item.badge.toLowerCase() === 'spicy' ? 'urgent' : 'health'}">${item.badge}</div>` : '';
+
+                        card.innerHTML = `
+                            <div class="card-image-wrapper">
+                                <img src="${item.img}" alt="${item.name}" class="card-image" loading="lazy">
+                            </div>
+                            <div class="card-content">
+                                <div class="card-header">
+                                    ${badgeHTML}
+                                    <div class="card-name">${item.name}</div>
+                                    <div class="card-price">Chef's Signature Selection</div>
+                                </div>
+                                <div class="card-bottom">
+                                    <div class="card-price-main">${item.price}</div>
+                                </div>
+                            </div>
+                        `;
+                        card.addEventListener('click', () => this.openItem(item, cat.id));
+                        wrap.appendChild(card);
+                        grid.appendChild(wrap);
+                    });
+                    group.appendChild(grid);
+                    container.appendChild(group);
+                });
+            }
+
+            setupCarouselObserver() {
+                const carousel = document.getElementById('comboCarousel');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => entry.target.classList.toggle('active', entry.isIntersecting));
+                }, { root: carousel, threshold: 0.6 });
+
+                document.querySelectorAll('.combo-card').forEach(card => observer.observe(card));
+            }
+
+            setupScrollSync() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) this.updateActiveNav(entry.target.id);
+                    });
+                }, { rootMargin: '-100px 0px -70% 0px' });
+
+                document.querySelectorAll('.menu-group, .combo-section').forEach(section => observer.observe(section));
+            }
+
+            updateActiveNav(id) {
+                if (this.isAutoScrolling) return;
+                document.querySelectorAll('.nav-pill').forEach(el => {
+                    const isActive = el.getAttribute('data-section') === id;
+                    el.classList.toggle('active', isActive);
+                    if (isActive) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                });
+            }
+
+            scrollToSection(id) {
+                const element = document.getElementById(id);
+                if (!element) return;
+
+                this.isAutoScrolling = true;
+                this.updateActiveNav(id);
+
+                const offset = 180;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementPosition = element.getBoundingClientRect().top - bodyRect;
+
+                window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
+
+                clearTimeout(this.scrollTimeout);
+                this.scrollTimeout = setTimeout(() => this.isAutoScrolling = false, 800);
+
+                this.setupRevealObserver();
+            }
+
+            setupRevealObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                document.querySelectorAll('.reveal-card').forEach(card => observer.observe(card));
+            }
+
+            handleSearch() {
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                    const query = document.getElementById('menuSearch').value.toLowerCase().trim();
+                    const isSearchEmpty = query === "";
+
+                    // Individual Cards
+                    document.querySelectorAll('.menu-card').forEach(card => {
+                        const name = card.querySelector('.card-name').innerText.toLowerCase();
+                        const wrap = card.closest('.reveal-card');
+                        wrap.style.display = (isSearchEmpty || name.includes(query)) ? 'block' : 'none';
+                    });
+
+                    // Menu Category Sections
+                    document.querySelectorAll('.menu-group').forEach(section => {
+                        const visibleInGroup = Array.from(section.querySelectorAll('.reveal-card'))
+                            .some(wrap => wrap.style.display !== 'none');
+                        section.style.display = (isSearchEmpty || visibleInGroup) ? 'block' : 'none';
+                    });
+
+                    // Combos Section
+                    const combosSection = document.getElementById('combos');
+                    if (combosSection) {
+                        combosSection.style.display = isSearchEmpty ? 'block' : 'none';
+                    }
+
+                    // Reset reveal animations for items that were hidden
+                    if (isSearchEmpty) {
+                        this.setupRevealObserver();
+                    }
+                }, 200);
+            }
+
+            toggleSearch() {
+                const container = document.getElementById('searchContainer');
+                const menuSearch = document.getElementById('menuSearch');
+                const isOpening = !container.classList.contains('active');
+
+                container.classList.toggle('active');
+
+                if (isOpening) {
+                    menuSearch.focus();
+                } else {
+                    menuSearch.value = "";
+                    this.handleSearch(); // Restore all items
+                }
+            }
+
+            toggleMenu(show) {
+                document.getElementById('menuOverlay').classList.toggle('active', show);
+                document.body.style.overflow = show ? 'hidden' : '';
+            }
+
+            openItem(item, categories) {
+                this.currentItem = item;
+                if (!Array.isArray(categories)) categories = [categories];
+
+                const modal = document.getElementById('modalOverlay');
+                document.getElementById('modalImg').src = item.img;
+                document.getElementById('modalTitle').innerText = item.name;
+                document.getElementById('modalSub').innerText = item.sub;
+                document.getElementById('modalPrice').innerText = `${item.price}`;
+
+                const customContent = document.getElementById('customContent');
+                customContent.innerHTML = '';
+
+                const majorCat = categories.find(c => customizationOptions[c]);
+                const options = customizationOptions[majorCat] || [];
+
+                options.forEach(group => {
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'custom-group';
+                    groupDiv.innerHTML = `
+                        <span class="custom-label">${group.title}</span>
+                        <div class="custom-grid">
+                            ${group.items.map(opt => `<div class="custom-option" data-price="${opt.price}">${opt.name}<small>+${opt.price.toFixed(2)}</small></div>`).join('')}
+                        </div>
+                    `;
+                    groupDiv.querySelectorAll('.custom-option').forEach(opt => {
+                        opt.addEventListener('click', () => opt.classList.toggle('selected'));
+                    });
+                    customContent.appendChild(groupDiv);
+                });
+
+                this.showModal(modal);
+            }
+
+            showModal(modal) {
+                modal.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => modal.classList.add('active'));
+                });
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (!modal.classList.contains('active')) modal.style.display = 'none';
+                }, 500);
+            }
+
+            addItemToOrder() {
+                const selections = Array.from(document.querySelectorAll('.custom-option.selected'))
+                    .map(el => ({
+                        name: el.childNodes[0].textContent.trim(),
+                        price: parseFloat(el.getAttribute('data-price'))
+                    }));
+
+                const basePrice = parseFloat(this.currentItem.price);
+                const extraPrice = selections.reduce((s, opt) => s + opt.price, 0);
+                const finalPrice = basePrice + extraPrice;
+
+                this.order.push({
+                    ...this.currentItem,
+                    finalPrice: finalPrice.toFixed(2),
+                    customizations: selections.map(s => s.name)
+                });
+                this.updateOrderUI();
+
+                const bar = document.getElementById('orderBar');
+                bar.classList.add('pop-anim');
+                setTimeout(() => bar.classList.remove('pop-anim'), 300);
+
+                this.closeModal('modalOverlay');
+            }
+
+            updateOrderUI() {
+                const bar = document.getElementById('orderBar');
+                if (this.order.length > 0) {
+                    bar.classList.add('active');
+                    document.getElementById('orderCount').innerText = this.order.length;
+                    document.getElementById('orderTotalPrice').innerText = this.order.reduce((s, i) => s + parseFloat(i.finalPrice), 0).toFixed(2);
+                } else {
+                    bar.classList.remove('active');
+                }
+            }
+
+            openOrderSummary() {
+                const modal = document.getElementById('orderSummaryModal');
+                const content = document.getElementById('summaryContent');
+
+                document.getElementById('receiptTime').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                content.innerHTML = this.order.map((item, idx) => `
+                    <div class="summary-item" data-index="${idx}">
+                        <div class="summary-details">
+                            <h4>${item.name}</h4>
+                            <p style="font-size: 0.7rem; color: #777;">${item.customizations.length > 0 ? item.customizations.join(', ') : 'Standard'}</p>
+                        </div>
+                        <div class="summary-price">${item.finalPrice}</div>
+                    </div>
+                `).join('');
+
+                content.querySelectorAll('.summary-item').forEach(el => {
+                    el.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+                    el.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+                    el.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+                });
+
+                document.getElementById('summaryTotal').innerText = this.order.reduce((s, i) => s + parseFloat(i.finalPrice), 0).toFixed(2);
+                this.showModal(modal);
+            }
+
+            handleTouchStart(e) {
+                this.touchStartX = e.touches[0].clientX;
+                e.currentTarget.classList.add('swiping');
+            }
+
+            handleTouchMove(e) {
+                this.touchCurrentX = e.touches[0].clientX;
+                const diff = this.touchCurrentX - this.touchStartX;
+                if (Math.abs(diff) > 10) e.currentTarget.style.transform = `translateX(${diff}px)`;
+            }
+
+            handleTouchEnd(e) {
+                const el = e.currentTarget;
+                el.classList.remove('swiping');
+                const diff = this.touchCurrentX - this.touchStartX;
+                if (Math.abs(diff) > 120) {
+                    el.classList.add('removed');
+                    setTimeout(() => {
+                        this.order.splice(parseInt(el.getAttribute('data-index')), 1);
+                        this.updateOrderUI();
+                        this.openOrderSummary();
+                    }, 300);
+                } else {
+                    el.style.transform = 'translateX(0)';
+                }
+            }
+
+            clearOrder() {
+                this.order = [];
+                this.updateOrderUI();
+                this.closeModal('orderSummaryModal');
+            }
+        }
+
+        const app = new MenuApp();
+        function clearOrder() { app.clearOrder(); }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BOBA BLISS | Premium Tea Experience</title>
+    <meta name="description"
+        content="Explore our premium boba menu — hand-crafted milk teas, fruit teas, and signature smoothies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧋</text></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Syne:wght@700;800&family=Inter:wght@400;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- ZEN CREAM THEME --- */
+            --bg-dark: #f8f5f0;           /* Soft Cream Background */
+            --bg-surface: #ffffff;
+            --bg-elevated: rgba(255, 255, 255, 0.5); /* Glass Base */
+            --accent-primary: #c9a07a;    /* Milk Tea Brown */
+            --accent-primary-rgb: 201, 160, 122;
+            --accent-glow: #e6ccb2;
+            --accent-warm: #d4a373;
+            --accent-black: #3c2a21;      /* Coffee Brown Text */
+            --text-main: #2d1810;
+            --text-muted: #8d7b6d;
+            --border-soft: rgba(201, 160, 122, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            
+            --transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            /* Fluid Typography */
+            --text-xs: clamp(0.7rem, 2vw, 0.75rem);
+            --text-sm: clamp(0.85rem, 2.2vw, 0.95rem);
+            --text-base: clamp(1rem, 2.5vw, 1.1rem);
+            --text-lg: clamp(1.2rem, 3.5vw, 1.4rem);
+            --text-xl: clamp(1.6rem, 4.5vw, 2.2rem);
+            --text-2xl: clamp(2.2rem, 6.5vw, 3.2rem);
+            
+            --badge-hot: #ff7675;
+            --badge-new: #55efc4;
+            --badge-limited: #fab1a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.4;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-dark);
+            position: sticky;
+            top: 0;
+            z-index: 101;
+            transition: var(--transition);
+            height: 70px;
+            color: var(--text-main);
+        }
+
+        header.scrolled {
+            height: 60px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-tools {
+            background: var(--bg-dark);
+            padding: 0.5rem 1.5rem 1.2rem 1.5rem;
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled + .header-tools {
+            top: 60px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .brand-name {
+            font-size: var(--text-lg);
+            font-weight: 800;
+            color: var(--accent-primary);
+            font-family: 'Syne', sans-serif;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            flex: 1;
+            text-align: center;
+        }
+
+        .category-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.6rem;
+            scrollbar-width: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-pill {
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            color: var(--text-muted);
+            font-size: var(--text-xs);
+            font-weight: 800;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--glass-border);
+            outline: none;
+        }
+
+        .nav-pill:active { transform: scale(0.95); }
+
+        .nav-pill.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 20px rgba(var(--accent-primary-rgb), 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* ── Swiper ── */
+        .menu-swiper {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            height: calc(100vh - 120px);
+            width: 100vw;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background: var(--bg-dark);
+            padding: 1.5rem 0;
+            align-items: center;
+        }
+
+        .menu-swiper::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ── Skeletons ── */
+        .skeleton {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            border-radius: 5px;
+            background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position-x: -200%;
+            }
+        }
+
+        .menu-card.is-skeleton {
+            background: white;
+            opacity: 1;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+
+        .skeleton-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            margin-bottom: 10px;
+            width: 80%;
+        }
+
+        .skeleton-text.short {
+            width: 40%;
+        }
+
+        .skeleton-text.large {
+            height: 40px;
+            width: 90%;
+        }
+
+        /* ── Cards ── */
+        .menu-card {
+            flex: 0 0 calc(100vw - 4rem);
+            height: 85%;
+            margin: 0 0.75rem;
+            position: relative;
+            scroll-snap-align: center;
+            overflow: hidden;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.06);
+            background: white;
+            transition: var(--transition);
+            transform: scale(0.9);
+            opacity: 0.6;
+            border: 1px solid var(--glass-border);
+            padding: 0;
+            text-align: left;
+        }
+
+        .menu-card:active {
+            transform: scale(0.98) !important;
+        }
+
+        /* first card needs left-padding offset */
+        .menu-card:first-child {
+            margin-left: 1.5rem;
+        }
+
+        .menu-card:last-child {
+            margin-right: 1.5rem;
+        }
+
+        .menu-card.in-focus {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .card-image-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .card-image {
+            /* --- ADJUST HOME IMAGE SIZE HERE --- */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.95);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-card.in-focus .card-image {
+            transform: scale(1.04);
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 3rem 2rem 2.5rem;
+            background: linear-gradient(to top, white 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+            color: var(--text-main);
+            text-align: left;
+            z-index: 5;
+            border-bottom-right-radius: 32px;
+        }
+
+        .cat-tag {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: var(--text-xs);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: inline-block;
+            font-family: 'Syne', sans-serif;
+        }
+
+        .card-name {
+            font-size: var(--text-xl);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-family: 'Syne', sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .card-sub {
+            color: var(--text-muted);
+            font-size: var(--text-sm);
+            max-width: 85%;
+        }
+
+        .card-price-main {
+            font-size: var(--text-base);
+            background: none;
+            padding: 0;
+            color: var(--accent-primary);
+            margin-top: 1rem;
+            font-weight: 900;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            position: absolute;
+            top: 1.4rem;
+            right: 1.4rem;
+            background: var(--badge-hot);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            z-index: 10;
+            font-family: 'Syne', sans-serif;
+        }
+
+        @keyframes badge-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 8px rgba(255, 71, 87, 0);
+            }
+        }
+
+        .badge.best {
+            background: var(--badge-hot);
+            animation: badge-pulse 2s ease infinite;
+        }
+
+        .badge.new {
+            background: var(--badge-new);
+        }
+
+        .badge.limited {
+            background: var(--badge-limited);
+            animation: badge-pulse 2s ease infinite;
+        }
+
+        /* ── Slide counter ── */
+        .slide-counter {
+            position: absolute;
+            top: 1.4rem;
+            left: 1.4rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            z-index: 10;
+            letter-spacing: 1px;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            overflow: hidden; /* Prevent horizontal scroll on overlay */
+        }
+
+        .modal-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-sheet {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            padding-top: 4rem;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden; /* Fix: Block horizontal overflow from background blobs */
+            background: var(--bg-surface);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-sheet::-webkit-scrollbar {
+            display: none;
+        }
+
+        .modal-sheet::before {
+            content: '';
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: rgba(var(--accent-primary-rgb), 0.2);
+            border-radius: 50%;
+            top: 10%;
+            right: -60px;
+            filter: blur(60px);
+            pointer-events: none;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            z-index: 10;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close-btn:active {
+            transform: scale(0.9);
+        }
+
+        .modal-close-btn svg {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .modal-title-bubbly {
+            font-family: 'Syne', sans-serif;
+            font-weight: 900;
+            font-size: var(--text-2xl);
+            text-align: center;
+            color: var(--text-main);
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+            text-transform: capitalize;
+            position: relative;
+            z-index: 2;
+        }
+
+        .modal-hero-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-hero-image-focused {
+            /* --- ADJUST DETAIL IMAGE SIZE HERE --- */
+            width: 100%;
+            max-height: 45vh; /* Increase this number to make it bigger */
+            
+            object-fit: contain;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.2));
+            transform: perspective(1200px) rotateY(-8deg) rotateX(10deg);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 2;
+            flex-shrink: 1;
+            min-height: 0;
+            margin: 0;
+        }
+
+        .size-selector-bar {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 50px;
+            padding: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .size-btn {
+            flex: 1;
+            text-align: center;
+            padding: 0.7rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: var(--transition);
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        .size-btn.active {
+            background: white;
+            color: var(--accent-black);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
+        }
+
+        .size-btn span {
+            display: block;
+            font-size: 0.6rem;
+            opacity: 0.7;
+            margin-top: 1px;
+            font-weight: 700;
+        }
+
+        .extra-dropdown {
+            padding: 0 1.2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--accent-black);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* ── Toppings ── */
+        .toppings-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding: 0.5rem 0 1.5rem 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .toppings-grid::-webkit-scrollbar { display: none; }
+
+        .topping-chip {
+            flex: 0 0 auto;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 0.8rem 1.4rem;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            outline: none;
+            text-align: center;
+            white-space: nowrap;
+            min-height: 52px;
+        }
+
+        .topping-chip.active {
+            background: #ffffff;
+            color: #1a1a1a;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            border-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .topping-chip span { 
+            opacity: 0.5; 
+            font-size: 0.7rem; 
+            font-weight: 900;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        /* ── Shortlist Modal ── */
+        .shortlist-modal {
+            background: var(--bg-light);
+            padding: 2rem 1.5rem;
+            border-radius: 32px 32px 0 0;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2000;
+        }
+
+        .shortlist-modal.active {
+            transform: translateY(0);
+        }
+
+        .shortlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--accent-gray);
+        }
+
+        .shortlist-info h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .shortlist-info p {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .shortlist-remove {
+            color: var(--badge-red);
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .checkout-pill {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 100%;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+            margin-bottom: env(safe-area-inset-bottom, 1rem);
+        }
+
+        .checkout-pill:active {
+            transform: scale(0.97);
+        }
+
+        .pill-price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-black);
+        }
+
+        .pill-action {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--accent-black);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── Order bar ── */
+        .order-bar {
+            position: fixed;
+            bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 50px;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 2100;
+            transition: var(--transition);
+            min-width: 250px;
+            box-shadow: 0 10px 40px rgba(var(--accent-primary-rgb), 0.4);
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .order-bar:active {
+            transform: translateX(-50%) scale(0.96);
+        }
+
+        .order-bar.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        .bounce {
+            animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes ping {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); box-shadow: 0 0 30px rgba(var(--accent-primary-rgb), 0.6); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .ping {
+            animation: ping 0.5s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .modal-sheet {
+                max-width: 480px;
+                margin: 0 auto;
+                border-radius: 40px;
+                height: 90vh;
+                margin-top: 5vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="mainHeader">
+        <div class="header-left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </div>
+        <div class="brand-name">BOBA BLISS</div>
+        <div class="header-right">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+            </svg>
+        </div>
+    </header>
+
+    <div class="header-tools">
+        <nav class="category-nav">
+            <button class="nav-pill active" data-section="milk-tea">Milk Teas</button>
+            <button class="nav-pill" data-section="fruit-tea">Fruit Mix</button>
+            <button class="nav-pill" data-section="signature">Signature</button>
+            <button class="nav-pill" data-section="smoothie">Smoothies</button>
+        </nav>
+    </div>
+
+    <!-- Fullscreen horizontal swiper -->
+    <div class="menu-swiper" id="menuSwiper">
+        <!-- Skeletons shown initially -->
+        <div class="menu-card is-skeleton">
+            <div class="skeleton skeleton-img"></div>
+            <div class="card-content">
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text large"></div>
+                <div class="skeleton skeleton-text"></div>
+            </div>
+        </div>
+        <div class="menu-card is-skeleton">
+            <div class="skeleton skeleton-img"></div>
+            <div class="card-content">
+                <div class="skeleton skeleton-text short"></div>
+                <div class="skeleton skeleton-text large"></div>
+                <div class="skeleton skeleton-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="order-bar" id="orderBar" aria-label="View selection">
+        <div id="orderCount"
+            style="background:white; color:black; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-weight:900;">
+            0</div>
+        <div style="text-transform:uppercase; font-weight:900; letter-spacing:1px; flex:1; text-align:center;">My
+            Selection</div>
+        <div id="orderTotal" style="font-weight:900;">0</div>
+    </button>
+
+    <!-- Shortlist Modal -->
+    <div class="modal-overlay" id="shortlistOverlay" style="z-index: 2050;">
+        <div class="shortlist-modal" id="shortlistModal">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-weight: 900; font-size: 1.5rem;">Selection Summary</h2>
+                <div id="closeShortlist" style="cursor: pointer; font-weight: 900; opacity: 0.5;">CLOSE</div>
+            </div>
+            <div id="shortlistContent">
+                <!-- Items will be injected here -->
+            </div>
+            <div style="margin-top: 2rem; border-top: 2px solid var(--accent-gray); padding-top: 1.5rem;">
+                <div
+                    style="display: flex; justify-content: space-between; font-weight: 900; font-size: 1.2rem; margin-bottom: 1rem;">
+                    <span>TOTAL</span>
+                    <span id="shortlistTotal">0</span>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1rem;">
+                    Show this screen to the staff to complete your order.
+                </p>
+                <button class="checkout-pill" id="clearSelection"
+                    style="background: var(--accent-gray); color: var(--accent-black); justify-content: center;">
+                    <span class="pill-action">Clear All</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item detail modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-sheet" id="modalSheet">
+            <button class="modal-close-btn" id="modalClose" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </button>
+
+            <h1 id="modalTitle" class="modal-title-bubbly">Boba Drink</h1>
+
+            <img id="modalImg" src="" class="modal-hero-image-focused" alt="Boba drink">
+
+            <div class="size-selector-bar">
+                <button class="size-btn active" data-size="S">S<span>250ml</span></button>
+                <button class="size-btn" data-size="M">M<span>350ml</span></button>
+                <button class="size-btn" data-size="L">L<span>450ml</span></button>
+            </div>
+
+            <div
+                style="color: white; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                Customizations
+            </div>
+            <div class="toppings-grid" id="toppingsGrid">
+                <!-- Toppings injected here -->
+            </div>
+
+            <button class="checkout-pill" id="addToOrder">
+                <div class="pill-price" id="modalPrice">0</div>
+                <div class="pill-action">+ Add to selection</div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ── Menu data: all 10 real images ──────────────────────────────────────
+        const TOPPINGS = [
+            { id: 'pearls', name: 'Tapioca Pearls', price: 5 },
+            { id: 'jelly', name: 'Lychee Jelly', price: 5 },
+            { id: 'foam', name: 'Cheese Foam', price: 8 },
+            { id: 'popping', name: 'Popping Boba', price: 6 }
+        ];
+
+        /* Pricing Anchoring: Sort items with highest value at beginning and end */
+        const bobaData = [
+            {
+                id: "signature",
+                categoryName: "Signature",
+                name: "Golden Special Latte",
+                sub: "Warm, velvety spices meet premium slow-steamed milk",
+                price: 65,
+                img: "items/KakaoTalk_Photo_2026-01-27-14-38-40.png",
+                badge: "Limited Edition",
+                badgeType: "limited",
+                gradient: "linear-gradient(135deg,#7f5006,#f0c040)"
+            },
+            {
+                id: "signature",
+                categoryName: "Signature",
+                name: "Banana Coffee Blitz",
+                sub: "Cold brew caffeine meets smooth hand-mashed banana",
+                price: 60,
+                img: "items/Banana Coffee_w_ Logo.png",
+                badge: "Chef's Catch",
+                badgeType: "best",
+                gradient: "linear-gradient(135deg,#3d2b1f,#b5882a)"
+            },
+            {
+                id: "signature",
+                categoryName: "Signature",
+                name: "Banana Matcha Silk",
+                sub: "Earthy matcha swirled with sweet banana cream foam",
+                price: 60,
+                img: "items/Banana Matcha_w_ Logo.png",
+                badge: "Premium Choice",
+                badgeType: "new",
+                gradient: "linear-gradient(135deg,#1a5e24,#f9ca24)"
+            },
+            {
+                id: "milk-tea",
+                categoryName: "Milk Tea",
+                name: "Brown Sugar Pearl",
+                sub: "Artisanal hand-cooked pearls in nostalgic tiger-stripe sugar",
+                price: 55,
+                img: "items/brown-sugar-milk-tea.png",
+                badge: "Bestseller",
+                badgeType: "best",
+                gradient: "linear-gradient(135deg,#3b1a08,#7c3f1b)"
+            },
+            {
+                id: "signature",
+                categoryName: "Signature",
+                name: "Signature Iced Blend",
+                sub: "Our secret multi-layered milk tea for pure comfort",
+                price: 55,
+                img: "items/KakaoTalk_Image_2025-01-24-15-14-47_002.png",
+                gradient: "linear-gradient(135deg,#2c3e50,#bdc3c7)"
+            },
+            {
+                id: "smoothie",
+                categoryName: "Smoothie",
+                name: "Strawberry Banana",
+                sub: "Thick, creamy fruit fusion with gooey tapioca pearls",
+                price: 52,
+                img: "items/strawberry-banana-smoothie.png",
+                badge: "Fan Favourite",
+                badgeType: "best",
+                gradient: "linear-gradient(135deg,#d63031,#f9ca24)"
+            },
+            {
+                id: "milk-tea",
+                categoryName: "Milk Tea",
+                name: "Emerald Matcha",
+                sub: "Grade A artisanal matcha layered with fresh cream",
+                price: 48,
+                img: "items/strawberry-matcha-milk-tea.png",
+                badge: "New Arrival",
+                badgeType: "new",
+                gradient: "linear-gradient(135deg,#2d6a2f,#e87878)"
+            },
+            {
+                id: "milk-tea",
+                categoryName: "Milk Tea",
+                name: "Royal Taro Tea",
+                sub: "Smooth purple taro root blended with silky whole milk",
+                price: 48,
+                img: "items/Taro-Milk-Tea.png",
+                badge: null,
+                gradient: "linear-gradient(135deg,#5e2d82,#b07fd4)"
+            },
+            {
+                id: "milk-tea",
+                categoryName: "Milk Tea",
+                name: "Citrus Thai Tea",
+                sub: "Bold Thai-spiced black tea with a velvety milk finish",
+                price: 48,
+                img: "items/Thai-Milk-Tea.png",
+                badge: null,
+                gradient: "linear-gradient(135deg,#b85c00,#f0a050)"
+            },
+            {
+                id: "fruit-tea",
+                categoryName: "Fruit Mix",
+                name: "Peach Jasmine Mix",
+                sub: "Juicy summer peach in a crisp jasmine green base",
+                price: 45,
+                img: "items/peach-strawberry-fruit-tea.png",
+                badge: null,
+                gradient: "linear-gradient(135deg,#c0392b,#f39c12)"
+            }
+        ];
+
+        // ── App ────────────────────────────────────────────────────────────────
+        class BobaApp {
+            constructor() {
+                this.selection = JSON.parse(localStorage.getItem('boba_selection')) || [];
+                this.currentItem = null;
+                this.currentSize = 'S';
+                this.currentToppings = new Set();
+                this.init();
+            }
+
+            init() {
+                // Simulate skeleton loading
+                setTimeout(() => {
+                    this.renderCards();
+                    this.initScrollSync();
+                    this.handleZoomEffect();
+                    this.updateOrderBar();
+                }, 1500);
+
+                this.attachListeners();
+                this.attachHeaderScroll();
+            }
+
+            renderCards() {
+                const swiper = document.getElementById('menuSwiper');
+                swiper.innerHTML = '';
+
+                bobaData.forEach((item, idx) => {
+                    const card = document.createElement('button');
+                    card.className = 'menu-card';
+                    card.dataset.catId = item.id;
+                    card.setAttribute('aria-label', `View details for ${item.name}`);
+                    if (idx === 0) card.classList.add('in-focus');
+
+                    const badgeHTML = item.badge
+                        ? `<div class="badge ${item.badgeType || ''}">${item.badge}</div>`
+                        : '';
+
+                    card.innerHTML = `
+                        ${badgeHTML}
+                        <div class="slide-counter">${idx + 1} / ${bobaData.length}</div>
+                        <div class="card-image-wrapper">
+                            <img src="${item.img}" class="card-image" alt="${item.name}" loading="lazy">
+                        </div>
+                        <div class="card-content">
+                            <span class="cat-tag">${item.categoryName}</span>
+                            <div class="card-name">${item.name}</div>
+                            <div class="card-sub">${item.sub}</div>
+                            <div class="card-price-main">${item.price}</div>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => this.openItem(item));
+                    swiper.appendChild(card);
+                });
+            }
+
+            handleZoomEffect() {
+                const swiper = document.getElementById('menuSwiper');
+                const updateZoom = () => {
+                    const sw = swiper.getBoundingClientRect();
+                    const center = sw.left + sw.width / 2;
+                    document.querySelectorAll('.menu-card').forEach(card => {
+                        const cr = card.getBoundingClientRect();
+                        const cardCenter = cr.left + cr.width / 2;
+                        if (Math.abs(center - cardCenter) < 150) {
+                            card.classList.add('in-focus');
+                        } else {
+                            card.classList.remove('in-focus');
+                        }
+                    });
+                };
+                swiper.addEventListener('scroll', updateZoom, { passive: true });
+                updateZoom();
+            }
+
+            initScrollSync() {
+                const swiper = document.getElementById('menuSwiper');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const catId = entry.target.dataset.catId;
+                            this.updateActivePill(catId);
+                        }
+                    });
+                }, { root: swiper, threshold: 0.5 });
+
+                document.querySelectorAll('.menu-card').forEach(card => observer.observe(card));
+            }
+
+            updateActivePill(id) {
+                document.querySelectorAll('.nav-pill').forEach(pill => {
+                    pill.classList.toggle('active', pill.dataset.section === id);
+                });
+            }
+
+            openItem(item) {
+                this.currentItem = item;
+                this.currentSize = 'S';
+                this.currentToppings.clear();
+
+                const overlay = document.getElementById('modalOverlay');
+                const sheet = document.getElementById('modalSheet');
+
+                document.getElementById('modalImg').src = item.img;
+                document.getElementById('modalTitle').innerText = item.name;
+                sheet.style.background = item.gradient;
+                document.body.style.overflow = 'hidden'; // Lock main scroll
+
+                this.renderToppings();
+                this.updateModalPrice();
+
+                document.querySelectorAll('.size-btn').forEach((btn) => {
+                    btn.classList.toggle('active', btn.dataset.size === this.currentSize);
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        this.currentSize = btn.dataset.size;
+                        document.querySelectorAll('.size-btn').forEach(b => b.classList.toggle('active', b === btn));
+                        this.updateModalPrice();
+                    };
+                });
+
+                overlay.style.display = 'block';
+                requestAnimationFrame(() => overlay.classList.add('active'));
+            }
+
+            renderToppings() {
+                const grid = document.getElementById('toppingsGrid');
+                grid.innerHTML = '';
+                TOPPINGS.forEach(top => {
+                    const chip = document.createElement('button');
+                    chip.className = 'topping-chip';
+                    chip.innerHTML = `${top.name} <span>+${top.price}</span>`;
+                    chip.onclick = () => {
+                        if (this.currentToppings.has(top.id)) {
+                            this.currentToppings.delete(top.id);
+                            chip.classList.remove('active');
+                            chip.innerHTML = `${top.name} <span>+${top.price}</span>`;
+                        } else {
+                            this.currentToppings.add(top.id);
+                            chip.classList.add('active');
+                            chip.innerHTML = `✓ ${top.name} <span>+${top.price}</span>`;
+                        }
+                        this.updateModalPrice();
+                    };
+                    grid.appendChild(chip);
+                });
+            }
+
+            updateModalPrice() {
+                let price = parseFloat(this.currentItem.price);
+                
+                // Decoy Duo Rule: Middle closer to Large
+                if (this.currentSize === 'M') price += 10;
+                if (this.currentSize === 'L') price += 12;
+                
+                this.currentToppings.forEach(tid => {
+                    const topping = TOPPINGS.find(t => t.id === tid);
+                    if (topping) price += topping.price;
+                });
+
+                document.getElementById('modalPrice').innerText = price.toFixed(0);
+            }
+
+            closeModal() {
+                const overlay = document.getElementById('modalOverlay');
+                overlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore main scroll
+                setTimeout(() => { overlay.style.display = 'none'; }, 400);
+            }
+
+            attachListeners() {
+                document.querySelectorAll('.nav-pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        const target = document.querySelector(`.menu-card[data-cat-id="${pill.dataset.section}"]`);
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    });
+                });
+
+                document.getElementById('modalClose').onclick = () => this.closeModal();
+
+                document.getElementById('addToOrder').onclick = () => this.addToOrder();
+
+                // Shortlist listeners
+                document.getElementById('orderBar').onclick = () => this.toggleShortlist(true);
+                document.getElementById('closeShortlist').onclick = () => this.toggleShortlist(false);
+                document.getElementById('shortlistOverlay').onclick = (e) => {
+                    if (e.target === document.getElementById('shortlistOverlay')) this.toggleShortlist(false);
+                };
+                document.getElementById('clearSelection').onclick = () => {
+                    this.selection = [];
+                    this.saveSelection();
+                    this.updateOrderBar();
+                    this.toggleShortlist(false);
+                };
+            }
+
+            addToOrder() {
+                const finalPrice = parseFloat(document.getElementById('modalPrice').innerText);
+                const toppingNames = Array.from(this.currentToppings).map(tid => TOPPINGS.find(t => t.id === tid).name);
+
+                const itemData = {
+                    ...this.currentItem,
+                    size: this.currentSize,
+                    toppings: toppingNames,
+                    finalPrice: finalPrice,
+                    uid: Date.now()
+                };
+
+                this.selection.push(itemData);
+                this.saveSelection();
+                if ('vibrate' in navigator) navigator.vibrate([20, 50, 20]);
+                this.updateOrderBar();
+
+                // Success State Animation
+                const btn = document.getElementById('addToOrder');
+                const originalContent = btn.innerHTML;
+                btn.style.background = '#27ae60';
+                btn.style.borderColor = '#27ae60';
+                btn.innerHTML = `
+                    <div style="color:white; font-size:1.5rem; font-weight:900;">${finalPrice.toFixed(0)}</div>
+                    <div class="pill-action" style="color:white;">✓ ADDED!</div>
+                `;
+
+                // Ping the order bar
+                const bar = document.getElementById('orderBar');
+                bar.classList.add('ping');
+                setTimeout(() => bar.classList.remove('ping'), 600);
+
+                setTimeout(() => {
+                    this.closeModal();
+                    // Reset button after modal close transition
+                    setTimeout(() => {
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.innerHTML = originalContent;
+                    }, 500);
+                }, 800);
+            }
+
+            toggleShortlist(show) {
+                const overlay = document.getElementById('shortlistOverlay');
+                const modal = document.getElementById('shortlistModal');
+                if (show) {
+                    this.renderShortlist();
+                    overlay.style.display = 'block';
+                    setTimeout(() => {
+                        overlay.classList.add('active');
+                        modal.classList.add('active');
+                    }, 10);
+                } else {
+                    overlay.classList.remove('active');
+                    modal.classList.remove('active');
+                    setTimeout(() => overlay.style.display = 'none', 500);
+                }
+            }
+
+            renderShortlist() {
+                const content = document.getElementById('shortlistContent');
+                content.innerHTML = '';
+
+                if (this.selection.length === 0) {
+                    content.innerHTML = '<p style="text-align:center; padding: 2rem; opacity:0.5;">No items selected yet</p>';
+                    document.getElementById('shortlistTotal').innerText = '0';
+                    return;
+                }
+
+                this.selection.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'shortlist-item';
+                    itemDiv.innerHTML = `
+                        <div class="shortlist-info">
+                            <h4>${item.name}</h4>
+                            <p>${item.size} • ${item.toppings.length > 0 ? item.toppings.join(', ') : 'No Toppings'}</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-weight: 900; color:var(--text-main);">${item.finalPrice.toFixed(0)}</span>
+                            <div class="shortlist-remove" onclick="app.removeItem(${item.uid})">REMOVE</div>
+                        </div>
+                    `;
+                    content.appendChild(itemDiv);
+                });
+
+                const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
+                document.getElementById('shortlistTotal').innerText = total.toFixed(0);
+            }
+
+            removeItem(uid) {
+                this.selection = this.selection.filter(i => i.uid !== uid);
+                this.saveSelection();
+                this.updateOrderBar();
+                this.renderShortlist();
+                if (this.selection.length === 0) this.toggleShortlist(false);
+            }
+
+            saveSelection() {
+                localStorage.setItem('boba_selection', JSON.stringify(this.selection));
+            }
+
+            attachHeaderScroll() {
+                const header = document.getElementById('mainHeader');
+                window.addEventListener('scroll', () => {
+                    header.classList.toggle('scrolled', window.scrollY > 10);
+                }, { passive: true });
+            }
+
+            updateOrderBar() {
+                const bar = document.getElementById('orderBar');
+                if (this.selection.length > 0) {
+                    bar.classList.add('active');
+                    document.getElementById('orderCount').innerText = this.selection.length;
+                    const total = this.selection.reduce((s, i) => s + i.finalPrice, 0);
+                    document.getElementById('orderTotal').innerText = total.toFixed(0);
+                } else {
+                    bar.classList.remove('active');
+                }
+            }
+        }
+
+        window.app = new BobaApp();
+    </script>
+</body>
+
+</html>
