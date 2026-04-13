@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTAGE | Layout: Filmstrip</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --text: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --accent: #e6b17a;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(20, 20, 20, 0.7);
+            --transition: cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 2.5rem 4rem; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; }
+
+        /* --- FILMSTRIP LAYOUT --- */
+        .filmstrip-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            padding: 0 15vw;
+        }
+
+        .filmstrip-container::-webkit-scrollbar { display: none; }
+
+        .film-card {
+            flex: 0 0 70vw;
+            height: 100%;
+            scroll-snap-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10rem 4rem 5rem 4rem;
+            position: relative;
+            transition: opacity 0.8s ease, transform 0.8s var(--transition);
+        }
+
+        /* Ambient Background (Blurred Image) */
+        .ambient-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -1; filter: blur(100px) brightness(0.3);
+            opacity: 0; transition: opacity 1s ease;
+        }
+
+        .film-card.active .ambient-bg { opacity: 0.6; }
+
+        .card-visual {
+            width: 100%;
+            height: 45vh;
+            border-radius: 32px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .card-visual img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-content { display: flex; flex-direction: column; gap: 1rem; }
+
+        .card-name { font-size: 4rem; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+        .card-desc { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; font-weight: 300; line-height: 1.6; }
+        .card-price { font-size: 2rem; color: var(--accent); font-weight: 600; margin-top: 1rem; }
+
+        /* Counter */
+        .counter {
+            position: fixed; bottom: 4rem; left: 4rem; font-size: 1.5rem; font-weight: 800;
+            mix-blend-mode: difference;
+        }
+
+        @media (max-width: 1000px) {
+            .film-card { flex: 0 0 85vw; padding: 5rem 2rem; }
+            .card-name { font-size: 2.5rem; }
+            .header { padding: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="brand">VANTAGE.FILM</div>
+    </header>
+
+    <div class="counter" id="counter">01 / 03</div>
+
+    <main class="filmstrip-container" id="strip">
+        <!-- Item 01 -->
+        <div class="film-card active" data-index="1">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200" alt="Coffee">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Obsidian Ristretto</h2>
+                <p class="card-desc">A deep, concentrated extraction that captures the pure velvet essence of our shade-grown Antigua beans.</p>
+                <span class="card-price">$4.50</span>
+            </div>
+        </div>
+
+        <!-- Item 02 -->
+        <div class="film-card" data-index="2">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1200" alt="Pastry">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">72-Layer Charcoal Croissant</h2>
+                <p class="card-desc">Signature lamination using Isigny Ste Mère butter, infused with active charcoal for an atmospheric smoke finish.</p>
+                <span class="card-price">$6.50</span>
+            </div>
+        </div>
+
+        <!-- Item 03 -->
+        <div class="film-card" data-index="3">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" alt="Cocktail">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Midnight Martini</h2>
+                <p class="card-desc">Post-extraction espresso reduction, shaken over nitrogen ice with premium small-batch grain vodka.</p>
+                <span class="card-price">$16.00</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const strip = document.getElementById('strip');
+        const cards = document.querySelectorAll('.film-card');
+        const counter = document.getElementById('counter');
+
+        strip.addEventListener('scroll', () => {
+            let activeIndex = 0;
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const containerRect = strip.getBoundingClientRect();
+                const cardMid = rect.left + rect.width / 2;
+                const containerMid = containerRect.width / 2;
+
+                if (Math.abs(cardMid - containerMid) < 300) {
+                    card.classList.add('active');
+                    activeIndex = index + 1;
+                    counter.textContent = `0${activeIndex} / 03`;
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

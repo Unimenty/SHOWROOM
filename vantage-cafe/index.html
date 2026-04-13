@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTAGE | Artisanal Coffee & Social Club</title>
+    <meta name="description" content="Experience VANTAGE — A curated selection of artisanal coffee, seasonal pastries, and evening elixirs.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* DAWN THEME (DEFAULT) */
+            --bg: #f8f7f2;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: #666666;
+            --accent: #c9a07a;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(255, 255, 255, 0.7);
+            
+            --transition: cubic-bezier(0.76, 0, 0.24, 1);
+            --speed: 0.8s;
+        }
+
+        [data-theme="dusk"] {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --text: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --accent: #e6b17a;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(20, 20, 20, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color var(--speed) var(--transition), color var(--speed) var(--transition);
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* --- Visual Panel (Desktop) --- */
+        .visual-panel {
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .visual-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85);
+            transition: transform 1.5s var(--transition), opacity 1s var(--transition);
+            opacity: 0;
+            transform: scale(1.15) rotate(1deg);
+        }
+
+        .visual-image.active { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        .visual-overlay {
+            position: absolute;
+            bottom: 6rem;
+            left: 5rem;
+            z-index: 10;
+            color: white;
+            pointer-events: none;
+        }
+
+        .visual-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s var(--transition) 0.3s;
+        }
+
+        .visual-image.active ~ .visual-overlay .visual-label { opacity: 0.8; transform: translateY(0); }
+
+        .visual-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 8vw, 7rem);
+            line-height: 0.85;
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition) 0.5s;
+        }
+
+        .visual-image.active ~ .visual-overlay .visual-title { opacity: 1; transform: translateY(0); }
+
+        /* --- Menu Panel --- */
+        .menu-panel {
+            padding: 0;
+            overflow-y: auto;
+            position: relative;
+            background: var(--bg);
+            transition: background var(--speed) var(--transition);
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+
+        .menu-panel::-webkit-scrollbar { display: none; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 2000;
+            padding: 3rem 4rem 2rem 4rem;
+            transition: all 0.4s ease;
+        }
+
+        .header.scrolled {
+            padding: 1.5rem 4rem;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; }
+
+        .theme-toggle {
+            width: 80px; height: 36px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 40px; cursor: pointer;
+            padding: 4px; display: flex; align-items: center; transition: all 0.3s ease;
+        }
+
+        .toggle-knob { width: 26px; height: 26px; background: var(--text); border-radius: 50%; transition: transform 0.4s var(--transition); }
+        [data-theme="dusk"] .toggle-knob { transform: translateX(44px); }
+
+        .menu-content-wrapper { padding: 2rem 4rem 10rem 4rem; display: flex; flex-direction: column; gap: 8rem; }
+
+        .section { opacity: 0.15; transform: translateY(40px); transition: opacity 1s ease, transform 1s var(--transition); }
+        .section.in-view { opacity: 1; transform: translateY(0); }
+        .section-header { margin-bottom: 4rem; }
+        .section-tag { color: var(--accent); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 1rem; }
+        .section-title { font-size: 3.5rem; font-weight: 400; letter-spacing: -2px; line-height: 1; }
+
+        .items-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+
+        .menu-card {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 2.5rem;
+            cursor: pointer;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            transition: transform 0.4s ease;
+        }
+
+        .card-img-container { width: 100%; aspect-ratio: 1; border-radius: 20px; overflow: hidden; background: var(--surface); }
+        .card-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--transition); }
+        .menu-card:hover { transform: translateX(10px); }
+        .menu-card:hover .card-img-container img { transform: scale(1.1); }
+
+        .card-info { display: flex; flex-direction: column; justify-content: center; gap: 0.5rem; }
+        .card-name { font-size: 1.6rem; font-weight: 400; letter-spacing: -0.5px; }
+        .card-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.5; max-width: 90%; font-weight: 300; }
+        .card-price { font-size: 1.2rem; font-weight: 600; color: var(--accent); margin-top: 0.5rem; }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(25px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-body {
+            background: var(--bg); width: 90%; max-width: 500px; height: 85vh; max-height: 800px;
+            border-radius: 40px; overflow-y: auto; transform: translateY(100px);
+            transition: transform 0.8s var(--transition); box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+            position: relative; scrollbar-width: none;
+        }
+
+        .modal-body::-webkit-scrollbar { display: none; }
+        .modal-overlay.active .modal-body { transform: translateY(0); }
+
+        .modal-img-hero { width: 100%; height: 350px; object-fit: cover; }
+
+        .modal-close {
+            position: absolute; top: 1.5rem; right: 1.5rem; width: 44px; height: 44px;
+            background: white; border-radius: 50%; display: grid; place-items: center;
+            color: black; cursor: pointer; z-index: 100; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .modal-content { padding: 3rem; }
+        .insight-tag { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 1rem; display: block; }
+        .insight-title { font-size: 2.5rem; font-weight: 400; letter-spacing: -1px; margin-bottom: 1.5rem; }
+        .insight-section { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+        .insight-label { font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; display: block; text-transform: uppercase; letter-spacing: 2px; }
+        .insight-text { font-size: 1rem; color: var(--text-muted); line-height: 1.8; font-weight: 300; }
+
+        /* Progress Nav */
+        .nav-vertical { position: fixed; left: 2rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 1.5rem; z-index: 100; mix-blend-mode: difference; }
+        .nav-link { width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0.3; cursor: pointer; transition: all 0.4s ease; }
+        .nav-link.active { opacity: 1; transform: scale(1.5); }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1000px) {
+            .app-container { grid-template-columns: 1fr; }
+            .visual-panel { display: none; }
+            .menu-panel { background: var(--bg); }
+            .header { padding: 1.5rem 2rem; position: fixed; width: 100%; top: 0; }
+            .menu-content-wrapper { padding: 8rem 2rem 5rem 2rem; gap: 6rem; }
+            .menu-card { grid-template-columns: 1fr; gap: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 3rem; }
+            .card-img-container { aspect-ratio: 16/10; }
+            .section-title { font-size: 2.8rem; }
+            .nav-vertical { display: none; }
+        }
+    </style>
+</head>
+
+<body data-theme="dawn">
+    
+    <div class="nav-vertical">
+        <div class="nav-link active" data-target="coffee"></div>
+        <div class="nav-link" data-target="bakery"></div>
+        <div class="nav-link" data-target="social"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Visual Component (Desktop Only) -->
+        <section class="visual-panel">
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1600" 
+                 class="visual-image active" data-id="coffee" alt="Morning Coffee">
+            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1600" 
+                 class="visual-image" data-id="bakery" alt="Artisan Pastries">
+            <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1600" 
+                 class="visual-image" data-id="social" alt="Evening Vibe">
+            
+            <div class="visual-overlay">
+                <span class="visual-label" id="vLabel">The Morning Ritual</span>
+                <h1 class="visual-title" id="vTitle">Volume<br>One</h1>
+            </div>
+        </section>
+
+        <!-- Menu Panel -->
+        <main class="menu-panel" id="mainScroll">
+            <header class="header" id="mainHeader">
+                <div class="brand">VANTAGE.</div>
+                <div class="theme-toggle" id="themeToggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </header>
+
+            <div class="menu-content-wrapper">
+                
+                <!-- Section 01: Coffee -->
+                <section class="section in-view" id="coffee" data-label="The Morning Ritual" data-title="Volume One" data-img="coffee">
+                    <div class="section-header">
+                        <span class="section-tag">First Light</span>
+                        <h2 class="section-title">Specialty Brews</h2>
+                    </div>
+                    <div class="items-grid">
+                        <div class="menu-card" data-name="Obsidian Ristretto" data-price="$4.50" data-img="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=800" data-insight="Extracted with precision at 94°C for exactly 18 seconds. We use a high-altitude shade-grown bean from the Antigua region of Guatemala.">
+                            <div class="card-img-container">
+                                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=800" alt="Obsidian Ristretto">
+                            </div>
+                            <div class="card-info">
+                                <span class="card-name">Obsidian Ristretto</span>
+                                <p class="card-desc">Concentrated, sweet extraction of signature dark roast.</p>
+                                <span class="card-price">$4.50</span>
+                            </div>
+                        </div>
+                        <div class="menu-card" data-name="Vanilla Miso Latte" data-price="$7.00" data-img="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&q=80&w=800" data-insight="The umami of organic white miso balances the sweetness of hand-scraped Madagascar vanilla beans. A true avant-garde experience.">
+                            <div class="card-img-container">
+                                <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&q=80&w=800" alt="Vanilla Miso Latte">
+                            </div>
+                            <div class="card-info">
+                                <span class="card-name">Vanilla Miso Latte</span>
+                                <p class="card-desc">Organic miso, vanilla bean, and velvet milk.</p>
+                                <span class="card-price">$7.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 02: Bakery -->
+                <section class="section" id="bakery" data-label="The Artisan Hand" data-title="The Flourish" data-img="bakery">
+                    <div class="section-header">
+                        <span class="section-tag">Oven Born</span>
+                        <h2 class="section-title">Le Boulangerie</h2>
+                    </div>
+                    <div class="items-grid">
+                        <div class="menu-card" data-name="Active Croissant" data-price="$6.50" data-img="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=800" data-insight="Laminated with 72 layers of Isigny Ste Mère butter and a touch of activated charcoal for a deep obsidian hue and smoke notes.">
+                            <div class="card-img-container">
+                                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=800" alt="Croissant">
+                            </div>
+                            <div class="card-info">
+                                <span class="card-name">Charcoal Croissant</span>
+                                <p class="card-desc">72 layers of premium butter and charcoal infusion.</p>
+                                <span class="card-price">$6.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 03: Social -->
+                <section class="section" id="social" data-label="Nightfall Theory" data-title="Post Script" data-img="social">
+                    <div class="section-header">
+                        <span class="section-tag">The After Hours</span>
+                        <h2 class="section-title">Evening Elixirs</h2>
+                    </div>
+                    <div class="items-grid">
+                        <div class="menu-card" data-name="Vantage Martini" data-price="$16.00" data-img="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800" data-insight="Our signature espresso noir blend shaken with premium grain vodka and finished with a black sea salt rim.">
+                            <div class="card-img-container">
+                                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=800" alt="Martini">
+                            </div>
+                            <div class="card-info">
+                                <span class="card-name">Vantage Martini</span>
+                                <p class="card-desc">Cold brew reduction, vodka, and black salt.</p>
+                                <span class="card-price">$16.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer style="margin-top: 5rem; border-top: 1px solid var(--border); padding-top: 4rem;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">VANTAGE SOCIAL CLUB &bull; @vantage.social</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-body">
+            <div class="modal-close" id="modalClose">&times;</div>
+            <img src="" class="modal-img-hero" id="modalHero">
+            <div class="modal-content">
+                <span class="insight-tag">Artisanal Insight</span>
+                <h3 class="insight-title" id="modalTitle">Item Name</h3>
+                <div class="insight-section">
+                    <span class="insight-label">The Process</span>
+                    <p class="insight-text" id="modalInsight">Detailed insights about the item will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scrollContainer = document.getElementById('mainScroll');
+        const sections = document.querySelectorAll('.section');
+        const visualImages = document.querySelectorAll('.visual-image');
+        const navDots = document.querySelectorAll('.nav-link');
+        const header = document.getElementById('mainHeader');
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const vLabel = document.getElementById('vLabel');
+        const vTitle = document.getElementById('vTitle');
+
+        // Modal Elements
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalHero = document.getElementById('modalHero');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalInsight = document.getElementById('modalInsight');
+        const modalClose = document.getElementById('modalClose');
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            const next = body.getAttribute('data-theme') === 'dawn' ? 'dusk' : 'dawn';
+            body.setAttribute('data-theme', next);
+        });
+
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    const imgId = entry.target.dataset.img;
+                    sections.forEach(s => s.classList.remove('in-view'));
+                    entry.target.classList.add('in-view');
+                    visualImages.forEach(img => img.classList.toggle('active', img.dataset.id === imgId));
+                    vLabel.textContent = entry.target.dataset.label;
+                    vTitle.innerHTML = entry.target.dataset.title.replace(' ', '<br>');
+                    navDots.forEach(dot => dot.classList.toggle('active', dot.dataset.target === id));
+                }
+            });
+        }, { root: scrollContainer, threshold: 0.3, rootMargin: "-20% 0% -20% 0%" });
+
+        sections.forEach(s => observer.observe(s));
+
+        // Header Scroll
+        scrollContainer.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', scrollContainer.scrollTop > 50);
+            const activeImg = document.querySelector('.visual-image.active');
+            if (activeImg) activeImg.style.transform = `translateY(${scrollContainer.scrollTop * 0.02}px) scale(1.05)`;
+        });
+
+        // Modal Logic
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('click', () => {
+                modalHero.src = card.dataset.img;
+                modalTitle.textContent = card.dataset.name;
+                modalInsight.textContent = card.dataset.insight;
+                modalOverlay.classList.add('active');
+            });
+        });
+
+        modalClose.addEventListener('click', () => modalOverlay.classList.remove('active'));
+        modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) modalOverlay.classList.remove('active'); });
+
+        // Nav Click
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => document.getElementById(dot.dataset.target).scrollIntoView({ behavior: 'smooth' }));
+        });
+    </script>
+</body>
+</html>
