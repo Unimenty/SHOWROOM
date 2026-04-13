@@ -4,228 +4,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMO STUDIO | Master Showroom</title>
+    <title>LUMO STUDIO | Showroom</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #000000;
-            --surface: #0a0a0a;
+            --bg: #0c0c0c;
+            --surface: #141414;
             --text: #ffffff;
+            --text-muted: #888888;
             --accent: #ffffff;
-            --border: rgba(255, 255, 255, 0.1);
-            --transition: cubic-bezier(0.76, 0, 0.24, 1);
+            --border: rgba(255, 255, 255, 0.05);
+            --radius: 48px;
+            --transition: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            overflow: hidden; /* We use the container for scrolling */
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* --- MONOCHROME HUD --- */
-        .hud {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 3rem; pointer-events: none; z-index: 100;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-
-        .hud-top { display: flex; justify-content: space-between; align-items: flex-start; }
-        .hud-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
-
-        .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: 4px; pointer-events: auto; }
-        .tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; opacity: 0.5; }
-
-        .counter { font-size: 6rem; font-weight: 800; opacity: 0.1; line-height: 0.8; letter-spacing: -4px; }
-
-        /* --- HORIZONTAL CINEMATIC SCROLL --- */
-        .showroom-carousel {
+            padding: 2rem;
+            min-height: 100vh;
             display: flex;
-            height: 100vh;
-            width: 100vw;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            padding: 0 15vw;
+            flex-direction: column;
             align-items: center;
-            gap: 10vw;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        .showroom-carousel::-webkit-scrollbar { display: none; }
+        /* --- Minimal Header --- */
+        .header {
+            width: 100%;
+            max-width: 600px;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .brand { font-size: 1rem; font-weight: 800; letter-spacing: 5px; opacity: 0.4; margin-bottom: 1rem; }
+        .title { font-size: 2.5rem; font-weight: 400; letter-spacing: -1.5px; line-height: 1.1; }
+
+        /* --- Card Stack --- */
+        .stack {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding-bottom: 5rem;
+        }
 
         .project-card {
-            flex: 0 0 70vw;
-            height: 70vh;
-            scroll-snap-align: center;
-            position: relative;
-            border-radius: 4px; /* Minimalist clean edges */
-            overflow: hidden;
-            transition: transform 0.8s var(--transition);
-            cursor: pointer;
-            filter: grayscale(1);
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s var(--transition);
             border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .project-card:hover { transform: scale(1.02); filter: grayscale(0.5); border-color: white; }
-
-        .card-img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 1.5s var(--transition);
-            opacity: 0.6;
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: #1a1a1a;
         }
 
-        .project-card:hover .card-img { transform: scale(1.1); opacity: 0.8; }
-
-        /* Card Content Layer */
-        .card-content {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 5rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            display: flex; flex-direction: column; gap: 1.5rem;
-            transform: translateY(20px); transition: transform 0.8s var(--transition);
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .project-card:hover .card-content { transform: translateY(0); }
-
-        .card-tag { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; opacity: 0.6; }
-        .card-title { font-size: 5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; line-height: 0.9; }
-        .card-desc { font-size: 1rem; color: #aaa; max-width: 500px; line-height: 1.6; font-weight: 300; }
-
-        /* Quick Links Overlay */
-        .links-overlay {
-            display: flex; gap: 1rem; margin-top: 1rem; opacity: 0; 
-            transform: translateY(10px); transition: all 0.5s ease 0.2s;
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
         }
 
-        .project-card:hover .links-overlay { opacity: 1; transform: translateY(0); }
+        .arrow { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; }
 
-        .link-item {
-            padding: 0.6rem 1.2rem; background: white; color: black;
-            text-decoration: none; font-size: 0.7rem; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 1px;
+        .card-body { display: flex; flex-direction: column; gap: 0.5rem; }
+        .card-title { font-size: 2.2rem; font-weight: 600; letter-spacing: -1px; }
+        .card-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
+
+        /* Sub-links (Remixes) */
+        .sub-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .sub-btn {
+            padding: 0.7rem 1.2rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
             transition: 0.3s ease;
         }
 
-        .link-item:hover { background: #888; color: white; }
+        .sub-btn:hover { background: white; color: black; }
 
-        /* Background Text (Kinetic) */
-        .bg-text {
-            position: fixed; top: 50%; left: 0; width: 100%;
-            transform: translateY(-50%);
-            font-size: 30vw; font-weight: 900; color: rgba(255,255,255,0.02);
-            white-space: nowrap; pointer-events: none; z-index: 0;
-            text-transform: uppercase;
+        /* Abstract Decoration */
+        .decor {
+            position: absolute; top: -20px; right: -20px;
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            border-radius: 50%;
         }
 
-        @media (max-width: 1000px) {
-            .hud { padding: 1.5rem; }
-            .counter { font-size: 4rem; }
-            .project-card { flex: 0 0 85vw; height: 60vh; }
-            .card-title { font-size: 3rem; }
-            .card-content { padding: 3rem 2rem; }
-            .brand { font-size: 1rem; }
+        /* --- Footer --- */
+        footer { margin-top: auto; padding: 3rem; text-align: center; opacity: 0.3; font-size: 0.75rem; letter-spacing: 2px; }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .project-card { padding: 2rem; border-radius: 40px; }
+            .card-title { font-size: 1.8rem; }
+            .title { font-size: 2rem; }
         }
     </style>
 </head>
 
 <body>
-    
-    <div class="bg-text" id="bgText">CURATION</div>
 
-    <!-- HUD Layer -->
-    <div class="hud">
-        <div class="hud-top">
-            <div class="brand">LUMO_SHOWROOM</div>
-            <div class="tagline">v0.2 // MONOCHROME EDITION</div>
-        </div>
-        <div class="hud-bottom">
-            <div class="counter" id="activeIdx">01</div>
-            <div style="text-align: right; opacity: 0.4;">
-                <p>LATENCY: LOCAL</p>
-                <p>EST. 2026</p>
-            </div>
-        </div>
-    </div>
+    <header class="header">
+        <div class="brand">LUMO STUDIO</div>
+        <h1 class="title">Selective<br>Showcase.</h1>
+    </header>
 
-    <!-- Main Carousel -->
-    <main class="showroom-carousel" id="carousel">
+    <main class="stack">
         
-        <!-- P01: VANTAGE CAFE -->
-        <article class="project-card">
-            <img class="card-img" src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200" alt="Vantage">
-            <div class="card-content">
-                <span class="card-tag">Artisanal Social Club</span>
-                <h2 class="card-title">VANTAGE Cafe</h2>
-                <p class="card-desc">Experimental splitscreen menu with kinetic transitions and artisanal storytelling modules.</p>
-                <div class="links-overlay">
-                    <a href="vantage-cafe/index.html" class="link-item">Main</a>
-                    <a href="vantage-cafe/filmstrip.html" class="link-item">Filmstrip</a>
-                    <a href="vantage-cafe/bento.html" class="link-item">Bento</a>
-                    <a href="vantage-cafe/stacking.html" class="link-item">Stack</a>
+        <!-- VANTAGE -->
+        <div class="project-card">
+            <div class="decor"></div>
+            <div class="card-header">
+                <span class="tag">01 / Boutique Cafe</span>
+                <div class="arrow">↗</div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">VANTAGE</h2>
+                <p class="card-desc">Advanced digital menu system with 4 distinct layout strategies and artisanal insight modules.</p>
+                <div class="sub-links">
+                    <a href="vantage-cafe/index.html" class="sub-btn">Kinetic</a>
+                    <a href="vantage-cafe/filmstrip.html" class="sub-btn">Filmstrip</a>
+                    <a href="vantage-cafe/bento.html" class="sub-btn">Bento</a>
+                    <a href="vantage-cafe/stacking.html" class="sub-btn">Stacking</a>
                 </div>
             </div>
-        </article>
+        </div>
 
-        <!-- P02: AURA BOBA -->
-        <article class="project-card">
-            <img class="card-img" src="https://images.unsplash.com/photo-1558857563-b371f3014352?auto=format&fit=crop&q=80&w=1200" alt="Boba">
-            <div class="card-content">
-                <span class="card-tag">Minimalist Tea Bar</span>
+        <!-- BOBA -->
+        <div class="project-card">
+            <div class="decor"></div>
+            <div class="card-header">
+                <span class="tag">02 / Tea Bar</span>
+                <div class="arrow">↗</div>
+            </div>
+            <div class="card-body">
                 <h2 class="card-title">AURA Boba</h2>
-                <p class="card-desc">High-contrast mobile interface designed for rapid category browsing and sensory-first navigation.</p>
-                <div class="links-overlay">
-                    <a href="demo-boba/index.html" class="link-item">Enter Demo</a>
+                <p class="card-desc">A sensory-focused mobile menu interface highlighting ingredient purity and rapid navigation.</p>
+                <div class="sub-links">
+                    <a href="demo-boba/index.html" class="sub-btn">Launch Demo</a>
                 </div>
             </div>
-        </article>
+        </div>
 
-        <!-- P03: ZEN DINING -->
-        <article class="project-card">
-            <img class="card-img" src="https://images.unsplash.com/photo-1550966842-30cae010dd0e?auto=format&fit=crop&q=80&w=1200" alt="Dining">
-            <div class="card-content">
-                <span class="card-tag">Fine Dining Atelier</span>
+        <!-- DINING -->
+        <div class="project-card">
+            <div class="decor"></div>
+            <div class="card-header">
+                <span class="tag">03 / Fine Dining</span>
+                <div class="arrow">↗</div>
+            </div>
+            <div class="card-body">
                 <h2 class="card-title">ZEN Dining</h2>
-                <p class="card-desc">Atmospheric evening terminal for boutique restaurants. Focus on course-driven presentation and white-space.</p>
-                <div class="links-overlay">
-                    <a href="demo-dining/index.html" class="link-item">Enter Demo</a>
+                <p class="card-desc">Minimalist course-driven presentation for high-end restaurants and ateliers.</p>
+                <div class="sub-links">
+                    <a href="demo-dining/index.html" class="sub-btn">Launch Demo</a>
                 </div>
             </div>
-        </article>
+        </div>
 
     </main>
 
-    <script>
-        const carousel = document.getElementById('carousel');
-        const bgText = document.getElementById('bgText');
-        const activeIdx = document.getElementById('activeIdx');
-        const cards = document.querySelectorAll('.project-card');
+    <footer>
+        &copy; 2026 LUMO STUDIO &bull; BUILT FOR THE NEXT WAVE
+    </footer>
 
-        carousel.addEventListener('scroll', () => {
-            // Background Kinetic Effect
-            const scrollPos = carousel.scrollLeft;
-            bgText.style.transform = `translateY(-50%) translateX(${-scrollPos * 0.2}px)`;
-
-            // Counter Logic
-            cards.forEach((card, index) => {
-                const rect = card.getBoundingClientRect();
-                const containerRect = carousel.getBoundingClientRect();
-                const cardMid = rect.left + rect.width / 2;
-                const containerMid = containerRect.width / 2;
-
-                if (Math.abs(cardMid - containerMid) < 300) {
-                    activeIdx.textContent = `0${index + 1}`;
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>
