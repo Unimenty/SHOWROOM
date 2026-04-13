@@ -68,7 +68,7 @@
         /* Ambient Background (Blurred Image) */
         .ambient-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(100px) brightness(0.3);
+            object-fit: cover; z-index: -1; filter: blur(100px) brightness(0.2);
             opacity: 0; transition: opacity 1s ease;
         }
 
@@ -101,6 +101,7 @@
             .film-card { flex: 0 0 85vw; padding: 5rem 2rem; }
             .card-name { font-size: 2.5rem; }
             .header { padding: 2rem; }
+            .card-visual { height: 35vh; }
         }
     </style>
 </head>
@@ -110,10 +111,10 @@
         <div class="brand">VANTAGE.FILM</div>
     </header>
 
-    <div class="counter" id="counter">01 / 03</div>
+    <div class="counter" id="counter">01 / 10</div>
 
     <main class="filmstrip-container" id="strip">
-        <!-- Item 01 -->
+        <!-- 01 -->
         <div class="film-card active" data-index="1">
             <img class="ambient-bg" src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200">
             <div class="card-visual">
@@ -126,29 +127,120 @@
             </div>
         </div>
 
-        <!-- Item 02 -->
+        <!-- 02 -->
         <div class="film-card" data-index="2">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&q=80&w=1200" alt="Latte">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Vanilla Miso Latte</h2>
+                <p class="card-desc">The umami of organic white miso balances the sweetness of hand-scraped Madagascar vanilla bean.</p>
+                <span class="card-price">$7.50</span>
+            </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="film-card" data-index="3">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200" alt="Cold Brew">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Kyoto Slow Drip</h2>
+                <p class="card-desc">A patient 8-hour atmospheric extraction using mountain spring water and our signature blend.</p>
+                <span class="card-price">$9.00</span>
+            </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="film-card" data-index="4" id="c4">
             <img class="ambient-bg" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1200">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1200" alt="Pastry">
             </div>
             <div class="card-content">
-                <h2 class="card-name">72-Layer Charcoal Croissant</h2>
-                <p class="card-desc">Signature lamination using Isigny Ste Mère butter, infused with active charcoal for an atmospheric smoke finish.</p>
+                <h2 class="card-name">72-Layer Croissant</h2>
+                <p class="card-desc">Signature lamination using Isigny Ste Mère butter, infused with active charcoal for an atmospheric finish.</p>
                 <span class="card-price">$6.50</span>
             </div>
         </div>
 
-        <!-- Item 03 -->
-        <div class="film-card" data-index="3">
-            <img class="ambient-bg" src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
+        <!-- 05 -->
+        <div class="film-card" data-index="5">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&q=80&w=1200">
             <div class="card-visual">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" alt="Cocktail">
+                <img src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&q=80&w=1200" alt="Cube">
             </div>
             <div class="card-content">
-                <h2 class="card-name">Midnight Martini</h2>
-                <p class="card-desc">Post-extraction espresso reduction, shaken over nitrogen ice with premium small-batch grain vodka.</p>
+                <h2 class="card-name">Yuzu Custard Cube</h2>
+                <p class="card-desc">Brioche shell filled with silk-smooth yuzu custard and finished with torched meringue shards.</p>
+                <span class="card-price">$8.00</span>
+            </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="film-card" data-index="6">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=1200" alt="Tart">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Pistachio Rose Tart</h2>
+                <p class="card-desc">Persian pistachio praline, organic rose water infused cream, and a shortcrust base.</p>
+                <span class="card-price">$11.00</span>
+            </div>
+        </div>
+
+        <!-- 07 -->
+        <div class="film-card" data-index="7">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" alt="Martini">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Vantage Martini</h2>
+                <p class="card-desc">Cold brew reduction shaken with premium small-batch vodka and finished with black sea salt.</p>
                 <span class="card-price">$16.00</span>
+            </div>
+        </div>
+
+        <!-- 08 -->
+        <div class="film-card" data-index="8">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1200" alt="G&T">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Botanical G&T</h2>
+                <p class="card-desc">Artisanal tonic, nitrogen-frozen herbs, and hand-distilled botanical gin spirits.</p>
+                <span class="card-price">$14.00</span>
+            </div>
+        </div>
+
+        <!-- 09 -->
+        <div class="film-card" data-index="9">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200" alt="Burrata">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Truffle Burrata</h2>
+                <p class="card-desc">Smoked burrata, black truffle shavings, and seasonal honey-roasted stone fruit.</p>
+                <span class="card-price">$18.00</span>
+            </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="film-card" data-index="10">
+            <img class="ambient-bg" src="https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&q=80&w=1200">
+            <div class="card-visual">
+                <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&q=80&w=1200" alt="Sliders">
+            </div>
+            <div class="card-content">
+                <h2 class="card-name">Wagyu Sliders</h2>
+                <p class="card-desc">A5 Wagyu beef, bone marrow butter, and pickled gold beets on a milk brioche bun.</p>
+                <span class="card-price">$22.00</span>
             </div>
         </div>
     </main>
@@ -169,7 +261,7 @@
                 if (Math.abs(cardMid - containerMid) < 300) {
                     card.classList.add('active');
                     activeIndex = index + 1;
-                    counter.textContent = `0${activeIndex} / 03`;
+                    counter.textContent = `${activeIndex < 10 ? '0' + activeIndex : activeIndex} / 10`;
                 } else {
                     card.classList.remove('active');
                 }
