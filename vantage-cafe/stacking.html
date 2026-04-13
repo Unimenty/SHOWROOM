@@ -12,11 +12,13 @@
     
     <style>
         :root {
-            --bg: #111;
-            --surface: #1a1a1a;
+            --bg: #0a0a0a;
+            --surface: #141414;
             --text: #fff;
             --accent: #c9a07a;
-            --transition: 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+            --transition: 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+            --card-height: 75vh;
+            --top-offset: 6vh;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,79 +28,124 @@
             background-color: var(--bg);
             color: var(--text);
             padding-bottom: 20vh;
+            /* Allow smooth overflow */
+            overflow-x: hidden;
         }
 
         .header {
             position: fixed; top: 0; left: 0; width: 100%;
-            padding: 3rem 4rem; z-index: 1000;
+            padding: 2.5rem 4rem; z-index: 1000;
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(to bottom, var(--bg), transparent);
+            background: linear-gradient(to bottom, var(--bg) 20%, transparent);
+            backdrop-filter: blur(10px);
         }
 
-        .brand { font-size: 1.8rem; font-weight: 800; }
+        .brand { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; }
 
-        /* --- STACKING CARDS LAYOUT --- */
+        /* --- STACKING CARDS ENGINE --- */
         .stack-container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding-top: 15rem;
+            padding: 12rem 2rem 5rem 2rem;
             display: flex;
             flex-direction: column;
-            gap: 15vh; /* Distance between cards */
+            gap: 0; /* Gap is managed by individual margins to allow overlap */
         }
 
         .stack-card {
             position: sticky;
-            top: 10vh; /* Where the card sticks */
+            top: var(--stack-top);
             width: 100%;
-            height: 75vh;
+            height: var(--card-height);
             background: var(--surface);
-            border-radius: 40px;
+            border-radius: 48px;
             overflow: hidden;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            box-shadow: 0 -30px 60px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 20vh;
+            grid-template-columns: 1.1fr 0.9fr;
+            box-shadow: 0 -40px 100px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 30vh; /* Adds scroll length before next card hits */
+            transition: transform 0.4s ease;
         }
 
-        /* Incremental stacking effect */
-        .stack-card:nth-child(1) { z-index: 1; }
-        .stack-card:nth-child(2) { z-index: 2; margin-top: -10vh; }
-        .stack-card:nth-child(3) { z-index: 3; margin-top: -10vh; }
-        .stack-card:nth-child(4) { z-index: 4; margin-top: -10vh; }
-        .stack-card:nth-child(5) { z-index: 5; margin-top: -10vh; }
-        .stack-card:nth-child(6) { z-index: 6; margin-top: -10vh; }
-        .stack-card:nth-child(7) { z-index: 7; margin-top: -10vh; }
-        .stack-card:nth-child(8) { z-index: 8; margin-top: -10vh; }
-        .stack-card:nth-child(9) { z-index: 9; margin-top: -10vh; }
-        .stack-card:nth-child(10) { z-index: 10; margin-top: -10vh; }
+        /* 
+           STACKING CALCULATIONS 
+           We increment 'top' slightly for each card so the top edge of previous 
+           cards remains visible, creating a proper "stack" look.
+        */
+        .stack-card:nth-child(1)  { --stack-top: calc(1 * var(--top-offset)); z-index: 1; }
+        .stack-card:nth-child(2)  { --stack-top: calc(2 * var(--top-offset)); z-index: 2; }
+        .stack-card:nth-child(3)  { --stack-top: calc(3 * var(--top-offset)); z-index: 3; }
+        .stack-card:nth-child(4)  { --stack-top: calc(4 * var(--top-offset)); z-index: 4; }
+        .stack-card:nth-child(5)  { --stack-top: calc(5 * var(--top-offset)); z-index: 5; }
+        .stack-card:nth-child(6)  { --stack-top: calc(6 * var(--top-offset)); z-index: 6; }
+        .stack-card:nth-child(7)  { --stack-top: calc(7 * var(--top-offset)); z-index: 7; }
+        .stack-card:nth-child(8)  { --stack-top: calc(8 * var(--top-offset)); z-index: 8; }
+        .stack-card:nth-child(9)  { --stack-top: calc(9 * var(--top-offset)); z-index: 9; }
+        .stack-card:nth-child(10) { --stack-top: calc(10 * var(--top-offset)); z-index: 10; }
 
         .card-visual { background: #000; position: relative; overflow: hidden; }
-        .card-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 1s ease; }
-        .stack-card:hover .card-visual img { transform: scale(1.05); }
+        .card-visual img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            opacity: 0.7; transition: transform 1.2s var(--transition), opacity 1s ease; 
+        }
+        
+        /* Subtle parallax-like zoom on hover */
+        .stack-card:hover .card-visual img { transform: scale(1.05); opacity: 0.9; }
 
         .card-info {
-            padding: 5rem;
+            padding: 5rem 4rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 2rem;
             background: var(--surface);
+            position: relative;
         }
 
-        .card-tag { font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); }
-        .card-name { font-size: 4rem; font-family: 'Cormorant Garamond', serif; font-style: italic; line-height: 1; }
-        .card-desc { font-size: 1.1rem; color: #999; line-height: 1.6; font-weight: 300; }
-        .card-price { font-size: 1.8rem; font-weight: 600; color: var(--accent); }
+        /* Decorative Numbering */
+        .card-info::after {
+            content: attr(data-rank);
+            position: absolute; top: 3rem; right: 4rem;
+            font-size: 8rem; font-weight: 800; color: rgba(255,255,255,0.03);
+            line-height: 1; pointer-events: none;
+        }
+
+        .card-tag { 
+            font-size: 0.75rem; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 4px; color: var(--accent); opacity: 0.8;
+        }
+        
+        .card-name { 
+            font-size: 4.5rem; font-family: 'Cormorant Garamond', serif; 
+            font-style: italic; line-height: 0.9; letter-spacing: -2px;
+        }
+        
+        .card-desc { 
+            font-size: 1.1rem; color: #aaa; line-height: 1.7; 
+            font-weight: 300; max-width: 90%;
+        }
+        
+        .card-price { font-size: 2rem; font-weight: 600; color: var(--accent); margin-top: 1rem; }
+
+        /* Smooth reveal for content */
+        .card-info > * { transform: translateY(20px); opacity: 0; transition: all 0.8s var(--transition); }
+        .stack-card:hover .card-info > * { transform: translateY(0); opacity: 1; }
+        /* Initial state show */
+        .card-info > .card-name, .card-info > .card-tag { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 1000px) {
-            .stack-card { grid-template-columns: 1fr; height: auto; min-height: 85vh; padding-bottom: 4rem; position: relative; top: 0 !important; margin-bottom: 3rem !important; margin-top: 0 !important; }
-            .card-visual { height: 40vh; }
-            .card-info { padding: 3rem; }
-            .card-name { font-size: 3rem; }
-            .header { padding: 2rem; }
-            .stack-container { padding-top: 8rem; gap: 0; }
+            .stack-card { 
+                grid-template-columns: 1fr; height: auto; min-height: 90vh; 
+                position: relative; top: 0 !important; margin-bottom: 3rem !important;
+                border-radius: 40px;
+            }
+            .card-visual { height: 45vh; }
+            .card-info { padding: 4rem 2.5rem; }
+            .card-info::after { top: 2rem; right: 2rem; font-size: 5rem; }
+            .card-name { font-size: 3.2rem; }
+            .header { padding: 1.5rem 2rem; }
+            .stack-container { padding: 8rem 1.5rem 5rem 1.5rem; gap: 2rem; }
         }
     </style>
 </head>
@@ -106,29 +153,30 @@
 <body>
     <header class="header">
         <div class="brand">VANTAGE.STACK</div>
+        <div style="font-size: 0.75rem; letter-spacing: 2px; opacity: 0.4;">VOLUME ONE</div>
     </header>
 
     <main class="stack-container">
         <!-- 01 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="01">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 01</span>
+                <span class="card-tag">Morning Ritual</span>
                 <h2 class="card-name">Obsidian<br>Ristretto</h2>
-                <p class="card-desc">Our deepest roast, extracted at high pressure to reveal hidden notes of dark cocoa and volcanic earth.</p>
+                <p class="card-desc">Deep, concentrated extraction captuing pure velvet essence of our shade-grown Antigua beans.</p>
                 <span class="card-price">$4.50</span>
             </div>
         </article>
 
         <!-- 02 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="02">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 02</span>
+                <span class="card-tag"> Morning Ritual</span>
                 <h2 class="card-name">Vanilla<br>Miso Latte</h2>
                 <p class="card-desc">The umami of organic white miso perfectly balances the sweetness of hand-scraped vanilla bean.</p>
                 <span class="card-price">$7.50</span>
@@ -136,25 +184,25 @@
         </article>
 
         <!-- 03 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="03">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 03</span>
+                <span class="card-tag">Morning Ritual</span>
                 <h2 class="card-name">Kyoto<br>Slow Drip</h2>
-                <p class="card-desc">A patient 8-hour atmospheric extraction using mountain spring water and our signature blend.</p>
+                <p class="card-desc">A patient 8-hour atmospheric extraction using mountain spring water and our signature high-altitude blend.</p>
                 <span class="card-price">$9.00</span>
             </div>
         </article>
 
         <!-- 04 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="04">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 04</span>
+                <span class="card-tag">The Boulangerie</span>
                 <h2 class="card-name">72-Layer<br>Croissant</h2>
                 <p class="card-desc">Created over 3 days using classic French techniques and charcoal-infused Isigny Ste Mère butter.</p>
                 <span class="card-price">$6.50</span>
@@ -162,12 +210,12 @@
         </article>
 
         <!-- 05 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="05">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 05</span>
+                <span class="card-tag">The Boulangerie</span>
                 <h2 class="card-name">Yuzu<br>Custard Cube</h2>
                 <p class="card-desc">Light-as-air brioche shell filled with silk-smooth yuzu custard and torched meringue shards.</p>
                 <span class="card-price">$8.00</span>
@@ -175,12 +223,12 @@
         </article>
 
         <!-- 06 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="06">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 06</span>
+                <span class="card-tag">The Boulangerie</span>
                 <h2 class="card-name">Pistachio<br>Rose Tart</h2>
                 <p class="card-desc">Persian pistachio praline with organic rose water infused cream on a delicate shortcrust base.</p>
                 <span class="card-price">$11.00</span>
@@ -188,12 +236,12 @@
         </article>
 
         <!-- 07 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="07">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 07</span>
+                <span class="card-tag">Evening Bistro</span>
                 <h2 class="card-name">Midnight<br>Martini</h2>
                 <p class="card-desc">The ultimate bridge between Day and Night. Signature cold brew reduction with premium spirits.</p>
                 <span class="card-price">$16.00</span>
@@ -201,12 +249,12 @@
         </article>
 
         <!-- 08 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="08">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 08</span>
+                <span class="card-tag">Evening Bistro</span>
                 <h2 class="card-name">Botanical<br>Laboratory</h2>
                 <p class="card-desc">Nitrogen-frozen herbs and hand-distilled botanical gin spirits, finished with artisanal tonic.</p>
                 <span class="card-price">$14.00</span>
@@ -214,12 +262,12 @@
         </article>
 
         <!-- 09 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="09">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 09</span>
+                <span class="card-tag">Evening Bistro</span>
                 <h2 class="card-name">Truffle<br>Burrata</h2>
                 <p class="card-desc">Smoked burrata, black truffle shavings, and seasonal honey-roasted stone fruits.</p>
                 <span class="card-price">$18.00</span>
@@ -227,12 +275,12 @@
         </article>
 
         <!-- 10 -->
-        <article class="stack-card">
+        <article class="stack-card" data-rank="10">
             <div class="card-visual">
                 <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&q=80&w=1200">
             </div>
             <div class="card-info">
-                <span class="card-tag">Selection 10</span>
+                <span class="card-tag">Evening Bistro</span>
                 <h2 class="card-name">Wagyu<br>Bone Marrow</h2>
                 <p class="card-desc">A5 Wagyu beef sliders with bone marrow butter and pickled gold beets on milk brioche.</p>
                 <span class="card-price">$22.00</span>
