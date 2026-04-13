@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMO SHOWROOM | Digital Menu Experiences</title>
+    <title>LUMO STUDIO | Master Showroom</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,11 +12,11 @@
     
     <style>
         :root {
-            --bg: #050505;
-            --surface: #0f0f0f;
+            --bg: #000000;
+            --surface: #0a0a0a;
             --text: #ffffff;
-            --accent: #e6b17a;
-            --border: rgba(255, 255, 255, 0.08);
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.1);
             --transition: cubic-bezier(0.76, 0, 0.24, 1);
         }
 
@@ -26,129 +26,206 @@
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            overflow-x: hidden;
+            overflow: hidden; /* We use the container for scrolling */
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Ambient Background --- */
-        .bg-glow {
+        /* --- MONOCHROME HUD --- */
+        .hud {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% -20%, #1a1510 0%, transparent 70%);
-            pointer-events: none; z-index: -1;
+            padding: 3rem; pointer-events: none; z-index: 100;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .header {
-            padding: 4rem 6rem;
-            display: flex; justify-content: space-between; align-items: flex-start;
+        .hud-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .hud-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+
+        .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: 4px; pointer-events: auto; }
+        .tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; opacity: 0.5; }
+
+        .counter { font-size: 6rem; font-weight: 800; opacity: 0.1; line-height: 0.8; letter-spacing: -4px; }
+
+        /* --- HORIZONTAL CINEMATIC SCROLL --- */
+        .showroom-carousel {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            padding: 0 15vw;
+            align-items: center;
+            gap: 10vw;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        .brand { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
-        .tagline { 
-            font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-style: italic; 
-            line-height: 0.9; margin-top: 2rem; max-width: 800px;
-        }
-
-        .grid-container {
-            padding: 4rem 6rem 10rem 6rem;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4rem;
-        }
+        .showroom-carousel::-webkit-scrollbar { display: none; }
 
         .project-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            overflow: hidden;
-            text-decoration: none;
-            color: white;
-            transition: transform 0.5s var(--transition), border-color 0.5s ease;
+            flex: 0 0 70vw;
+            height: 70vh;
+            scroll-snap-align: center;
             position: relative;
+            border-radius: 4px; /* Minimalist clean edges */
+            overflow: hidden;
+            transition: transform 0.8s var(--transition);
+            cursor: pointer;
+            filter: grayscale(1);
+            border: 1px solid var(--border);
         }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
+        .project-card:hover { transform: scale(1.02); filter: grayscale(0.5); border-color: white; }
+
+        .card-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 1.5s var(--transition);
+            opacity: 0.6;
         }
 
-        .card-visual { height: 450px; background: #000; overflow: hidden; position: relative; }
-        .card-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 1s var(--transition); }
-        .project-card:hover .card-visual img { opacity: 0.8; transform: scale(1.05); }
+        .project-card:hover .card-img { transform: scale(1.1); opacity: 0.8; }
 
-        .card-content { padding: 3rem; }
-        .card-tag { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); }
-        .card-title { font-size: 3rem; margin: 1rem 0; font-family: 'Cormorant Garamond', serif; font-style: italic; }
-        .card-desc { font-size: 1.1rem; color: #888; line-height: 1.6; font-weight: 300; margin-bottom: 2rem; }
-
-        .layout-links { display: flex; flex-wrap: wrap; gap: 1rem; }
-        .layout-btn {
-            padding: 0.8rem 1.5rem; border-radius: 100px; background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border); color: white; font-size: 0.8rem; font-weight: 600;
-            text-decoration: none; transition: 0.3s ease;
+        /* Card Content Layer */
+        .card-content {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex; flex-direction: column; gap: 1.5rem;
+            transform: translateY(20px); transition: transform 0.8s var(--transition);
         }
-        .layout-btn:hover { background: var(--accent); color: black; border-color: var(--accent); }
 
-        /* Mobile */
+        .project-card:hover .card-content { transform: translateY(0); }
+
+        .card-tag { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; opacity: 0.6; }
+        .card-title { font-size: 5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; line-height: 0.9; }
+        .card-desc { font-size: 1rem; color: #aaa; max-width: 500px; line-height: 1.6; font-weight: 300; }
+
+        /* Quick Links Overlay */
+        .links-overlay {
+            display: flex; gap: 1rem; margin-top: 1rem; opacity: 0; 
+            transform: translateY(10px); transition: all 0.5s ease 0.2s;
+        }
+
+        .project-card:hover .links-overlay { opacity: 1; transform: translateY(0); }
+
+        .link-item {
+            padding: 0.6rem 1.2rem; background: white; color: black;
+            text-decoration: none; font-size: 0.7rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s ease;
+        }
+
+        .link-item:hover { background: #888; color: white; }
+
+        /* Background Text (Kinetic) */
+        .bg-text {
+            position: fixed; top: 50%; left: 0; width: 100%;
+            transform: translateY(-50%);
+            font-size: 30vw; font-weight: 900; color: rgba(255,255,255,0.02);
+            white-space: nowrap; pointer-events: none; z-index: 0;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 1000px) {
-            .header, .grid-container { padding: 3rem 2rem; }
-            .grid-container { grid-template-columns: 1fr; gap: 2rem; }
-            .tagline { font-size: 3.5rem; }
-            .card-title { font-size: 2.5rem; }
+            .hud { padding: 1.5rem; }
+            .counter { font-size: 4rem; }
+            .project-card { flex: 0 0 85vw; height: 60vh; }
+            .card-title { font-size: 3rem; }
+            .card-content { padding: 3rem 2rem; }
+            .brand { font-size: 1rem; }
         }
     </style>
 </head>
 
 <body>
-    <div class="bg-glow"></div>
+    
+    <div class="bg-text" id="bgText">CURATION</div>
 
-    <header class="header">
-        <div class="brand">LUMO STUDIO.</div>
-        <div class="header-right" style="text-align: right;">
-            <p style="font-size: 0.8rem; letter-spacing: 2px; opacity: 0.5;">AVAILABILITY: Q2 2026</p>
-            <h1 class="tagline">Next-Generation Digital Menus for Premium Hospitality.</h1>
+    <!-- HUD Layer -->
+    <div class="hud">
+        <div class="hud-top">
+            <div class="brand">LUMO_SHOWROOM</div>
+            <div class="tagline">v0.2 // MONOCHROME EDITION</div>
         </div>
-    </header>
-
-    <main class="grid-container">
-        <!-- VANTAGE CAFE -->
-        <article class="project-card">
-            <div class="card-visual">
-                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200" alt="Vantage Cafe">
+        <div class="hud-bottom">
+            <div class="counter" id="activeIdx">01</div>
+            <div style="text-align: right; opacity: 0.4;">
+                <p>LATENCY: LOCAL</p>
+                <p>EST. 2026</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Main Carousel -->
+    <main class="showroom-carousel" id="carousel">
+        
+        <!-- P01: VANTAGE CAFE -->
+        <article class="project-card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80&w=1200" alt="Vantage">
             <div class="card-content">
-                <span class="card-tag">Case Study 01</span>
+                <span class="card-tag">Artisanal Social Club</span>
                 <h2 class="card-title">VANTAGE Cafe</h2>
-                <p class="card-desc">A luxury social club menu featuring split-screen kinetic transitions, artisanal storytelling, and immersive dark mode.</p>
-                
-                <div class="layout-links">
-                    <a href="vantage-cafe/index.html" class="layout-btn">Kinetic (Main)</a>
-                    <a href="vantage-cafe/filmstrip.html" class="layout-btn">Filmstrip</a>
-                    <a href="vantage-cafe/bento.html" class="layout-btn">Bento</a>
-                    <a href="vantage-cafe/stacking.html" class="layout-btn">Stacking</a>
+                <p class="card-desc">Experimental splitscreen menu with kinetic transitions and artisanal storytelling modules.</p>
+                <div class="links-overlay">
+                    <a href="vantage-cafe/index.html" class="link-item">Main</a>
+                    <a href="vantage-cafe/filmstrip.html" class="link-item">Filmstrip</a>
+                    <a href="vantage-cafe/bento.html" class="link-item">Bento</a>
+                    <a href="vantage-cafe/stacking.html" class="link-item">Stack</a>
                 </div>
             </div>
         </article>
 
-        <!-- BOBA SHOP -->
+        <!-- P02: AURA BOBA -->
         <article class="project-card">
-            <div class="card-visual">
-                <img src="https://images.unsplash.com/photo-1558857563-b371f3014352?auto=format&fit=crop&q=80&w=1200" alt="Boba Shop">
-            </div>
+            <img class="card-img" src="https://images.unsplash.com/photo-1558857563-b371f3014352?auto=format&fit=crop&q=80&w=1200" alt="Boba">
             <div class="card-content">
-                <span class="card-tag">Case Study 02</span>
+                <span class="card-tag">Minimalist Tea Bar</span>
                 <h2 class="card-title">AURA Boba</h2>
-                <p class="card-desc">A playful yet minimalist bubble tea menu focused on ingredient transparency and vibrant category navigation.</p>
-                
-                <div class="layout-links">
-                    <a href="demo-boba/index.html" class="layout-btn">Launch Demo</a>
+                <p class="card-desc">High-contrast mobile interface designed for rapid category browsing and sensory-first navigation.</p>
+                <div class="links-overlay">
+                    <a href="demo-boba/index.html" class="link-item">Enter Demo</a>
                 </div>
             </div>
         </article>
+
+        <!-- P03: ZEN DINING -->
+        <article class="project-card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1550966842-30cae010dd0e?auto=format&fit=crop&q=80&w=1200" alt="Dining">
+            <div class="card-content">
+                <span class="card-tag">Fine Dining Atelier</span>
+                <h2 class="card-title">ZEN Dining</h2>
+                <p class="card-desc">Atmospheric evening terminal for boutique restaurants. Focus on course-driven presentation and white-space.</p>
+                <div class="links-overlay">
+                    <a href="demo-dining/index.html" class="link-item">Enter Demo</a>
+                </div>
+            </div>
+        </article>
+
     </main>
 
-    <footer style="padding: 10rem 6rem 5rem 6rem; border-top: 1px solid var(--border);">
-        <p style="font-size: 0.9rem; color: #444;">&copy; 2026 LUMO CREATIVE STUDIO. ALL RIGHTS RESERVED.</p>
-    </footer>
+    <script>
+        const carousel = document.getElementById('carousel');
+        const bgText = document.getElementById('bgText');
+        const activeIdx = document.getElementById('activeIdx');
+        const cards = document.querySelectorAll('.project-card');
+
+        carousel.addEventListener('scroll', () => {
+            // Background Kinetic Effect
+            const scrollPos = carousel.scrollLeft;
+            bgText.style.transform = `translateY(-50%) translateX(${-scrollPos * 0.2}px)`;
+
+            // Counter Logic
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const containerRect = carousel.getBoundingClientRect();
+                const cardMid = rect.left + rect.width / 2;
+                const containerMid = containerRect.width / 2;
+
+                if (Math.abs(cardMid - containerMid) < 300) {
+                    activeIdx.textContent = `0${index + 1}`;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
