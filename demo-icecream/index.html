@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>GLACÉ | Artisan Creamery</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #FFFAF0;
+            --text: #2D1810;
+            --text-muted: #6E6E73;
+            --border: rgba(45, 24, 16, 0.08);
+            --radius: 32px;
+            --radius-sm: 20px;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --glass: rgba(255, 250, 240, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--cream);
+            color: var(--text);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Melting Hero --- */
+        .hero {
+            height: 40vh;
+            min-height: 300px;
+            background: linear-gradient(180deg, #FFDDE1 0%, #EE9CA7 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -3px;
+            color: white;
+            z-index: 2;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-sub {
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        .melt-layer {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            fill: var(--cream);
+            z-index: 1;
+        }
+
+        /* --- Navigation --- */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-scroll {
+            display: flex;
+            gap: 0.8rem;
+            overflow-x: auto;
+            padding: 0.5rem;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .category-btn.active {
+            background: var(--text);
+            color: white;
+            border-color: var(--text);
+        }
+
+        /* --- Menu Grid --- */
+        .menu-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .flavor-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .flavor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .flavor-visual {
+            height: 220px;
+            border-radius: calc(var(--radius) - 8px);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .flavor-card:hover .flavor-visual {
+            transform: scale(1.02);
+        }
+
+        .scoop-emoji {
+            font-size: 5rem;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            transition: var(--transition);
+        }
+
+        .flavor-card:hover .scoop-emoji {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .flavor-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .flavor-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .flavor-category {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(45, 24, 16, 0.05);
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .flavor-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flavor-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+
+        .add-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--text);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: #000;
+        }
+
+        .add-btn:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        /* --- Cart Sidebar --- */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .cart-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background: white;
+            z-index: 201;
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .close-cart {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cart-item-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .cart-qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--text);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            background: #000;
+        }
+
+        /* Mobile Cart Summary */
+        .cart-summary {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            transform: translateY(100%);
+            transition: 0.3s;
+            z-index: 150;
+        }
+
+        .cart-summary.visible {
+            transform: translateY(0);
+        }
+
+        .cart-summary-total {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .view-cart-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--text);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            z-index: 300;
+            opacity: 0;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Flavor Gradients */
+        .bg-pistachio {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+        }
+
+        .bg-mango {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+
+        .bg-lavender {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+
+        .bg-strawberry {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .bg-chocolate {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .bg-matcha {
+            background: linear-gradient(135deg, #9be15d 0%, #00e3ae 100%);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: white;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-section {
+                padding: 2rem 1rem;
+            }
+
+            .hero {
+                height: 30vh;
+                min-height: 250px;
+            }
+
+            .grid {
+                gap: 1rem;
+            }
+
+            .flavor-card {
+                padding: 1rem;
+            }
+
+            .flavor-visual {
+                height: 180px;
+            }
+
+            .scoop-emoji {
+                font-size: 3.5rem;
+            }
+
+            .flavor-name {
+                font-size: 1.2rem;
+            }
+
+            .cart-summary.visible {
+                transform: translateY(0);
+            }
+        }
+
+        @media (min-width: 769px) {
+            .cart-summary {
+                display: none;
+            }
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="hero">
+        <h1 class="hero-title">GLACÉ</h1>
+        <p class="hero-sub">ARTISAN SMALL-BATCH GELATO</p>
+        <svg class="melt-layer" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path
+                d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,122.7C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+            </path>
+        </svg>
+    </section>
+
+    <nav class="nav-container">
+        <div class="nav-scroll" id="categoryNav">
+            <button class="category-btn active" data-category="all">All Flavors</button>
+            <button class="category-btn" data-category="signature">Signatures</button>
+            <button class="category-btn" data-category="seasonal">Seasonal</button>
+            <button class="category-btn" data-category="vegan">Vegan</button>
+            <button class="category-btn" data-category="sorbet">Sorbet</button>
+        </div>
+    </nav>
+
+    <main class="menu-section">
+        <div class="section-header">
+            <h2 class="section-title">Artisan Collection</h2>
+            <p class="section-desc">Churned daily in micro-batches • Locally sourced ingredients</p>
+        </div>
+
+        <div class="grid" id="menuGrid"></div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Scoops 🍨</h2>
+            <button class="close-cart" id="closeCartBtn">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Mobile Cart Summary -->
+    <div class="cart-summary" id="cartSummary">
+        <span id="cartItemCount">0 items</span>
+        <span class="cart-summary-total" id="summaryTotal">$0.00</span>
+        <button class="view-cart-btn" id="viewCartBtn">View Cart</button>
+    </div>
+
+    <footer>
+        <div class="footer-logo">GLACÉ</div>
+        <p>CHURNED DAILY IN SMALL BATCHES</p>
+        <p style="font-size: 0.7rem; margin-top: 1rem;">© 2024 • Artisan Ice Cream • Made with ♥</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // --- Flavor Database ---
+        const flavors = [
+            { id: 1, name: "Bronte Pistachio", price: 6.50, desc: "Sicilian roasted pistachios with a hint of Maldon sea salt and olive oil.", category: "signature", emoji: "🍦", gradient: "bg-pistachio" },
+            { id: 2, name: "Alphonso Dream", price: 5.50, desc: "Pureed Indian Alphonso mangoes, churned into a velvety smooth sorbet.", category: "sorbet", emoji: "🥭", gradient: "bg-mango" },
+            { id: 3, name: "Wild Honey Lavender", price: 6.00, desc: "Infused with dried French lavender and swirled with organic mountain honey.", category: "signature", emoji: "🪻", gradient: "bg-lavender" },
+            { id: 4, name: "Ruby Cacao", price: 6.50, desc: "Naturally pink cocoa beans with notes of fresh berries and a citrus finish.", category: "signature", emoji: "🍫", gradient: "bg-chocolate" },
+            { id: 5, name: "Ceremonial Matcha", price: 6.00, desc: "Premium grade Uji matcha from Kyoto, earthy and deep with a creamy base.", category: "signature", emoji: "🍵", gradient: "bg-matcha" },
+            { id: 6, name: "Summer Solstice", price: 5.50, desc: "Macerated field strawberries with balsamic reduction and fresh basil.", category: "seasonal", emoji: "🍓", gradient: "bg-strawberry" },
+            { id: 7, name: "Coconut Sorbet", price: 5.00, desc: "Creamy coconut milk sorbet with toasted coconut flakes.", category: "vegan", emoji: "🥥", gradient: "bg-vanilla" },
+            { id: 8, name: "Salted Caramel", price: 6.50, desc: "House-made caramel with Guérande sea salt flakes.", category: "signature", emoji: "🧂", gradient: "bg-honey" },
+            { id: 9, name: "Dark Chocolate", price: 6.00, desc: "72% Venezuelan dark chocolate, intensely rich and smooth.", category: "signature", emoji: "🍫", gradient: "bg-chocolate" }
+        ];
+
+        // --- Cart State ---
+        let cart = [];
+
+        // --- DOM Elements ---
+        const menuGrid = document.getElementById('menuGrid');
+        const cartItemsEl = document.getElementById('cartItems');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const cartSummary = document.getElementById('cartSummary');
+        const cartItemCountEl = document.getElementById('cartItemCount');
+        const summaryTotalEl = document.getElementById('summaryTotal');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const toastEl = document.getElementById('toast');
+
+        // --- Helper Functions ---
+        function showToast(message, duration = 2000) {
+            toastEl.textContent = message;
+            toastEl.classList.add('show');
+            setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, duration);
+        }
+
+        function updateCartUI() {
+            // Update cart items list
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = '<div class="empty-cart">Your cart is empty<br>🍦 Add some scoops!</div>';
+            } else {
+                cartItemsEl.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h4>${escapeHTML(item.name)}</h4>
+                            <p>$${item.price.toFixed(2)} each</p>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
+                            <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            <span class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Calculate totals
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            cartTotalEl.textContent = `$${total.toFixed(2)}`;
+            summaryTotalEl.textContent = `$${total.toFixed(2)}`;
+            cartItemCountEl.textContent = `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`;
+
+            // Show/hide mobile cart summary
+            if (cart.length > 0) {
+                cartSummary.classList.add('visible');
+            } else {
+                cartSummary.classList.remove('visible');
+            }
+        }
+
+        function updateQuantity(id, newQuantity) {
+            if (newQuantity <= 0) {
+                cart = cart.filter(item => item.id !== id);
+                showToast('Removed from cart');
+            } else {
+                const item = cart.find(item => item.id === id);
+                if (item) item.quantity = newQuantity;
+            }
+            updateCartUI();
+            saveCartToLocal();
+        }
+
+        function addToCart(flavor) {
+            const existing = cart.find(item => item.id === flavor.id);
+            if (existing) {
+                existing.quantity++;
+                showToast(`Added another ${flavor.name} • Total: ${existing.quantity}`);
+            } else {
+                cart.push({ ...flavor, quantity: 1 });
+                showToast(`${flavor.name} added to cart! 🍨`);
+            }
+            updateCartUI();
+            saveCartToLocal();
+        }
+
+        function saveCartToLocal() {
+            localStorage.setItem('glaceCart', JSON.stringify(cart));
+        }
+
+        function loadCartFromLocal() {
+            const saved = localStorage.getItem('glaceCart');
+            if (saved) {
+                try {
+                    cart = JSON.parse(saved);
+                    updateCartUI();
+                } catch (e) { console.error(e); }
+            }
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // --- Render Menu ---
+        let currentCategory = 'all';
+
+        function renderMenu() {
+            const filtered = currentCategory === 'all'
+                ? flavors
+                : flavors.filter(f => f.category === currentCategory);
+
+            if (filtered.length === 0) {
+                menuGrid.innerHTML = '<div style="text-align: center; padding: 4rem;">No flavors in this category yet.<br>✨ Check back soon!</div>';
+                return;
+            }
+
+            menuGrid.innerHTML = filtered.map(flavor => `
+                <div class="flavor-card" data-id="${flavor.id}">
+                    <div class="flavor-visual ${flavor.gradient}">
+                        <span class="scoop-emoji">${flavor.emoji}</span>
+                    </div>
+                    <div class="flavor-info">
+                        <span class="flavor-category">${flavor.category.toUpperCase()}</span>
+                        <h3 class="flavor-name">${escapeHTML(flavor.name)}</h3>
+                        <p class="flavor-desc">${escapeHTML(flavor.desc)}</p>
+                    </div>
+                    <div class="flavor-footer">
+                        <span class="price">$${flavor.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCartById(${flavor.id})">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCartById(id) {
+            const flavor = flavors.find(f => f.id === id);
+            if (flavor) addToCart(flavor);
+        }
+
+        // --- Filtering ---
+        function setCategory(category) {
+            currentCategory = category;
+            renderMenu();
+
+            // Update active button state
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // --- Cart UI Functions ---
+        function openCart() {
+            cartSidebar.classList.add('open');
+            cartOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCart() {
+            cartSidebar.classList.remove('open');
+            cartOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // --- Checkout ---
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty! Add some scoops first 🍨', 2000);
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            // In a real app, this would redirect to payment
+            showToast(`Order placed! Total: $${total.toFixed(2)} for ${itemCount} items. 🎉`, 3000);
+
+            // Clear cart
+            cart = [];
+            updateCartUI();
+            saveCartToLocal();
+            closeCart();
+        }
+
+        // --- Event Listeners ---
+        function initEventListeners() {
+            // Category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setCategory(btn.dataset.category);
+                });
+            });
+
+            // Cart controls
+            document.getElementById('closeCartBtn').addEventListener('click', closeCart);
+            document.getElementById('viewCartBtn').addEventListener('click', openCart);
+            document.getElementById('checkoutBtn').addEventListener('click', checkout);
+            cartOverlay.addEventListener('click', closeCart);
+
+            // Close on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && cartSidebar.classList.contains('open')) {
+                    closeCart();
+                }
+            });
+        }
+
+        // --- Initialize ---
+        function init() {
+            loadCartFromLocal();
+            renderMenu();
+            initEventListeners();
+        }
+
+        // Make functions global for onclick handlers
+        window.addToCartById = addToCartById;
+        window.updateQuantity = updateQuantity;
+
+        init();
+    </script>
+</body>
+
+</html>
