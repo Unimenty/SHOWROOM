@@ -510,6 +510,40 @@
             font-size: 0.95rem;
         }
 
+        .card-tap-hint {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+            color: white;
+            padding: 1.5rem 1rem 0.6rem;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .menu-card:hover .card-tap-hint,
+        .menu-card:active .card-tap-hint {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .card-tap-hint {
+                opacity: 0.8;
+                transform: translateY(0);
+            }
+        }
+
         /* --- MODAL (Native CSS Animations) --- */
         .signature-item {
             margin-top: 1rem;
@@ -1348,6 +1382,12 @@
                             <div class="combo-includes">${combo.includes}</div>
                         </div>
                         <div class="combo-price-tag">${combo.price}</div>
+                        <div class="card-tap-hint">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            View Details
+                        </div>
                     `;
                     card.addEventListener('click', () => {
                         this.openItem({
@@ -1392,6 +1432,12 @@
                         card.innerHTML = `
                             <div class="card-image-wrapper">
                                 <img src="${item.img}" alt="${item.name}" class="card-image" loading="lazy">
+                                <div class="card-tap-hint">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    Tap to Customize
+                                </div>
                             </div>
                             <div class="card-content">
                                 <div class="card-header">
@@ -1401,6 +1447,7 @@
                                 </div>
                                 <div class="card-bottom">
                                     <div class="card-price-main">${item.price}</div>
+                                    <div style="font-size: 0.6rem; font-weight: 800; opacity: 0.4; letter-spacing: 1px;">DETAILS →</div>
                                 </div>
                             </div>
                         `;

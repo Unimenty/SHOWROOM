@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -43,7 +43,16 @@
             text-align: center;
         }
 
-        .brand { font-size: 1rem; font-weight: 800; letter-spacing: 5px; opacity: 0.4; margin-bottom: 1rem; }
+        .brand { 
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem; 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            margin-bottom: 1rem; 
+            text-transform: lowercase;
+            color: #ffffff;
+        }
+        .brand .dot { color: #9ead9b; }
         .title { font-size: 2.5rem; font-weight: 400; letter-spacing: -1.5px; line-height: 1.1; }
 
         /* --- Card Stack --- */
@@ -142,7 +151,7 @@
 <body>
 
     <header class="header">
-        <div class="brand">KOMEYSTUDIOS</div>
+        <div class="brand">komeystudios<span class="dot">.</span></div>
         <h1 class="title">Selective<br>Showcase.</h1>
     </header>
 
